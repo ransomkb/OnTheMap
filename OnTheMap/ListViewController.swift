@@ -1,5 +1,5 @@
 //
-//  SecondViewController.swift
+//  ListViewController.swift
 //  OnTheMap
 //
 //  Created by Ransom Barber on 5/16/15.
@@ -8,8 +8,10 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
+class ListViewController: UIViewController {
 
+    @IBOutlet weak var pinButtonItem: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -19,7 +21,6 @@ class SecondViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 
 }
 
