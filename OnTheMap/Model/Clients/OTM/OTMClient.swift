@@ -22,10 +22,10 @@ class OTMClient: NSObject {
     var firstName: String? = nil
     var lastName: String? = nil
     
-    var mapString: String? = nil
-    var mediaURL: String? = nil
-    var userLat: Double? = nil
-    var userLong: Double? = nil
+    var mapString: String? = "some city"
+    var mediaURL: String? = "some url"
+    var userLat: Double? = 36.9719
+    var userLong: Double? = -122.0264
     
     var myLocation: StudentLocation? = nil
     var students:[StudentLocation] = [StudentLocation]()
@@ -233,5 +233,7 @@ class OTMClient: NSObject {
         
         return userLocationDictionary
     }
+    
+    
 
 }

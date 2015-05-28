@@ -6,14 +6,18 @@
 //  Copyright (c) 2015 Hart Book. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import MapKit
 
 class MapViewController: UIViewController {
     
+    // maybe don't need these
     var pinName: String!
     var pinLat: String!
     var pinLong: String!
+    
+    var pinData = [PinData]()
     
     let regionRadius: CLLocationDistance = 4000000
 
@@ -23,9 +27,23 @@ class MapViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        println("Loading Map View")
+        
+        mapView.delegate = self
+        
         let initialLocation = CLLocation(latitude: 39.50, longitude: -98.35)
         
         centerMapOnLocation(initialLocation)
+
+        self.loadInitialData()
+        println(self.pinData)
+        println("Try to add pins in viewDidLoad.")
+        self.mapView!.addAnnotations(self.pinData)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
     }
     
     func centerMapOnLocation(location: CLLocation) {
@@ -53,7 +71,19 @@ class MapViewController: UIViewController {
         var mapItem = MKMapItem(placemark: placemark)
         mapItem.name = "\(self.pinName!)"
         mapItem.openInMapsWithLaunchOptions(options)
+    }
+    
+    func loadInitialData() {
         
+        println("Loading Initial Data")
+        let students = OTMClient.sharedInstance().students
+        
+        if !students.isEmpty {
+            for location in students {
+                let pinDatum = PinData(title: "\(location.firstName) \(location.lastName)", urlString: location.mediaURL, coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude))
+                pinData.append(pinDatum)
+            }
+        }
     }
 
 }

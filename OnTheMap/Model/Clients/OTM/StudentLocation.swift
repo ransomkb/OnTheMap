@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Hart Book. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
 struct StudentLocation {
@@ -26,17 +27,17 @@ struct StudentLocation {
     var studentDictionary: [String:AnyObject]
     
     // IMPORTANT: probably don't need this
-    init() {
-        studentDictionary = [
-            "uniqueKey" : uniqueKey,
-            "firstName" : firstName,
-            "lastName" : lastName,
-            "mapString" : mapString,
-            "mediaURL" : mediaURL,
-            "latitude" : latitude,
-            "longitude" : longitude
-        ]
-    }
+//    init() {
+//        studentDictionary = [
+//            "uniqueKey" : uniqueKey,
+//            "firstName" : firstName,
+//            "lastName" : lastName,
+//            "mapString" : mapString,
+//            "mediaURL" : mediaURL,
+//            "latitude" : latitude,
+//            "longitude" : longitude
+//        ]
+//    }
     
     init(dictionary: [String:AnyObject]) {
         studentDictionary = dictionary
@@ -63,6 +64,13 @@ struct StudentLocation {
         }
         
         return studentLocations
+    }
+    
+    func buildUdateString() -> String {
+        var updateString: String
+        updateString = "\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\":\(longitude)"
+        
+        return updateString
     }
     
 }

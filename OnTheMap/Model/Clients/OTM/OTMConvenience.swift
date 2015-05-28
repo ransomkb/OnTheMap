@@ -160,14 +160,15 @@ extension OTMClient {
     func updateUserLocation(completionHandler: (success: Bool, errorString: String?) -> Void) {
         
         println("Updating User Location.")
-        var parsingError: NSError? = nil
+        //var parsingError: NSError? = nil
         
         let objectId = OTMClient.sharedInstance().myLocation?.objectID
-        let userLocation = OTMClient.sharedInstance().myLocation!.studentDictionary as [String:AnyObject]
+        let udateString = OTMClient.sharedInstance().myLocation!.buildUdateString()
         
-        var parameters = NSJSONSerialization.dataWithJSONObject(userLocation, options: NSJSONWritingOptions.PrettyPrinted, error: &parsingError)
+        var parameters = "{\(udateString)}"
+        //NSJSONSerialization.dataWithJSONObject(userLocation, options: NSJSONWritingOptions.PrettyPrinted, error: &parsingError)
         
-        println("PUT parameters: \(parameters!)")
+        println("PUT parameters: \(parameters)")
         
         var requestValues = [[String:String]]()
         requestValues.append([OTMClient.RequestKeys.Value : OTMClient.RequestKeys.ParseApplicationID, OTMClient.RequestKeys.Field : OTMClient.RequestKeys.ParseAppIDField])

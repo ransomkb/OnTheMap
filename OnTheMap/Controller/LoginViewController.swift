@@ -76,39 +76,25 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 println("Last Name: \(OTMClient.sharedInstance().lastName!)")
                 println("First Name: \(OTMClient.sharedInstance().firstName!)")
                 
-                OTMClient.sharedInstance().searchForAStudentLocation({ (success, errorString) -> Void in
+                // Call this in the completion handler to ensure order of operations
+                OTMClient.sharedInstance().getStudentLocations({ (success, errorString) -> Void in
                     if success {
-                        println("Succeeded in Searching.")
+                        println("Done Getting Student Locations")
                         if (errorString == nil) {
-                            println("Retrieved Existing User's Location.")
+                            println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations.")
+                            
+                            
                         } else {
                             println("\(errorString!)")
                         }
                         
-                        // Call this in the completion handler to ensure order of operations
-                        OTMClient.sharedInstance().getStudentLocations({ (success, errorString) -> Void in
-                            if success {
-                                println("Done Getting Student Locations")
-                                if (errorString == nil) {
-                                    println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations. Prepare to segue.")
-                                } else {
-                                    println("\(errorString!)")
-                                }
-                            }
-                        })
+                        println(" Prepare to segue.")
+                        NSOperationQueue.mainQueue().addOperationWithBlock {
+                            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+                            self.presentViewController(controller, animated: true, completion: nil)
+                        }
                     }
                 })
-                
-                OTMClient.sharedInstance().updateUserLocation({ (success, errorString) -> Void in
-                    if success {
-                        println("User Location was updated.")
-                    }
-                })
-                
-                NSOperationQueue.mainQueue().addOperationWithBlock {
-                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
-                    self.presentViewController(controller, animated: true, completion: nil)
-                }
             } else {
                 self.displayError(errorString)
             }
