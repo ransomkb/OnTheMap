@@ -27,7 +27,7 @@ class OTMClient: NSObject {
     var userLat: Double? = 36.9719
     var userLong: Double? = -122.0264
     
-    var myLocation: StudentLocation? = nil
+    var userLocation: StudentLocation? = nil
     var students:[StudentLocation] = [StudentLocation]()
     
     override init() {

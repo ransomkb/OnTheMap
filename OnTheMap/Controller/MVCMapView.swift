@@ -31,8 +31,18 @@ extension MapViewController: MKMapViewDelegate {
     
     // just practice for tapping on a control
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
-        let location = view.annotation as! PinData
-        let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-        location.mapItem().openInMapsWithLaunchOptions(launchOptions)
+        let pin = view.annotation as! PinData
+        let urlString = pin.urlString
+        let url = NSURL(string: urlString)
+        let request = NSURLRequest(URL: url!)
+        
+        let webController = self.storyboard!.instantiateViewControllerWithIdentifier("WebViewController") as! WebViewController
+        webController.urlRequest = request
+        webController.authenticating = false
+        
+        self.navigationController!.pushViewController(webController, animated: true)
+        
+//        let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
+//        location.mapItem().openInMapsWithLaunchOptions(launchOptions)
     }
 }

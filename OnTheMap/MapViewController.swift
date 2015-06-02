@@ -18,6 +18,7 @@ class MapViewController: UIViewController {
     var pinLong: String!
     
     var pinData = [PinData]()
+    var students:[StudentLocation] = [StudentLocation]()
     
     let regionRadius: CLLocationDistance = 4000000
 
@@ -28,22 +29,41 @@ class MapViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         println("Loading Map View")
-        
         mapView.delegate = self
         
         let initialLocation = CLLocation(latitude: 39.50, longitude: -98.35)
-        
         centerMapOnLocation(initialLocation)
+        
+        // Moved: Did Call this in the completion handler to ensure order of operations
+        OTMClient.sharedInstance().getStudentLocations({ (success, errorString) -> Void in
+            if success {
+                println("Done Getting Student Locations")
+                if (errorString == nil) {
+                    self.students = OTMClient.sharedInstance().students
+                    println("Retrieved \(self.students.count) Student Locations.")
+                    self.loadInitialData()
+                    println(self.pinData)
+                    println("Try to add pins in viewDidLoad.")
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.mapView!.addAnnotations(self.pinData)
+                    }
+                } else {
+                    println("\(errorString!)")
+                }
+            }
+        })
 
-        self.loadInitialData()
-        println(self.pinData)
-        println("Try to add pins in viewDidLoad.")
-        self.mapView!.addAnnotations(self.pinData)
+        //self.mapView!.addAnnotations(self.pinData)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        println("View Will Appear")
+        //self.mapView!.reloadInputViews()
+        //self.loadInitialData()
+        self.mapView!.removeAnnotations(self.pinData)
+        self.mapView!.addAnnotations(self.pinData)
     }
     
     func centerMapOnLocation(location: CLLocation) {
@@ -76,12 +96,12 @@ class MapViewController: UIViewController {
     func loadInitialData() {
         
         println("Loading Initial Data")
-        let students = OTMClient.sharedInstance().students
         
-        if !students.isEmpty {
-            for location in students {
+        if !self.students.isEmpty {
+            for location in self.students {
                 let pinDatum = PinData(title: "\(location.firstName) \(location.lastName)", urlString: location.mediaURL, coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude))
                 pinData.append(pinDatum)
+                //self.mapView!.addAnnotation(pinDatum)
             }
         }
     }

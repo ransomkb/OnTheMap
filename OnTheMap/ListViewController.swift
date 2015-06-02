@@ -11,7 +11,7 @@ import UIKit
 
 class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var students = OTMClient.sharedInstance().students
+    var students:[StudentLocation] = [StudentLocation]()
 
     @IBOutlet weak var pinButtonItem: UIBarButtonItem!
     
@@ -20,8 +20,31 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        println("Table View did load.")
+        tableView.delegate = self
     }
-
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        println("Table View will appear.")
+        self.students = OTMClient.sharedInstance().students
+        
+        var locID = 0
+        println("Show students:")
+        for loc in self.students {
+            ++locID
+            println("\(locID) \(loc.objectID) \(loc.firstName) \(loc.lastName) \(loc.mediaURL)")
+        }
+        
+        self.tableView.reloadData()
+        
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.students.count
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TableCell") as! UITableViewCell
         let studentLocation = students[indexPath.row]
@@ -40,9 +63,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.navigationController!.pushViewController(detailController, animated: true)
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.students.count
-    }
     
 }
 

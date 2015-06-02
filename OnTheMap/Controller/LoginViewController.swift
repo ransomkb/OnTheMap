@@ -17,6 +17,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var keyboardAdjusted = false
     var lastKeyboardOffset : CGFloat = 0.0
     
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
     @IBOutlet weak var imageView: UIImageView!
     
     @IBOutlet weak var emailTextField: UITextField!
@@ -52,6 +54,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func loginUser(sender: AnyObject) {
+        activityIndicatorView.startAnimating()
 //        if let userID = emailTextField.text {
 //            if userID.isEmpty {
 //                // send message to user to complete field
@@ -71,34 +74,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         OTMClient.sharedInstance().authenticateWithLogIn(self, completionHandler: { (success, errorString) -> Void in
             
             if success {
+                self.activityIndicatorView.stopAnimating()
+                
                 println("Authentication with Log In was successful!")
                 println("Account Key: \(OTMClient.sharedInstance().accountKey!)")
                 println("Last Name: \(OTMClient.sharedInstance().lastName!)")
                 println("First Name: \(OTMClient.sharedInstance().firstName!)")
                 
-                // Call this in the completion handler to ensure order of operations
-                OTMClient.sharedInstance().getStudentLocations({ (success, errorString) -> Void in
-                    if success {
-                        println("Done Getting Student Locations")
-                        if (errorString == nil) {
-                            println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations.")
-                            
-                            
-                        } else {
-                            println("\(errorString!)")
-                        }
-                        
-                        println(" Prepare to segue.")
-                        NSOperationQueue.mainQueue().addOperationWithBlock {
-                            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
-                            self.presentViewController(controller, animated: true, completion: nil)
-                        }
-                    }
-                })
+                println(" Prepare to segue.")
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+                    self.presentViewController(controller, animated: true, completion: nil)
+                }
             } else {
                 self.displayError(errorString)
             }
         })
+        
+        activityIndicatorView.stopAnimating()
     }
     
     @IBAction func loginWithFacebook(sender: AnyObject) {

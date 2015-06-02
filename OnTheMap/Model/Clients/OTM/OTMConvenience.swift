@@ -122,7 +122,7 @@ extension OTMClient {
                         //println(eString)
                         completionHandler(success: true, errorString: eString)
                     } else {
-                        self.myLocation = self.students[0]
+                        self.userLocation = self.students[0]
                         completionHandler(success: true, errorString: nil)
                     }
                 }
@@ -162,8 +162,8 @@ extension OTMClient {
         println("Updating User Location.")
         //var parsingError: NSError? = nil
         
-        let objectId = OTMClient.sharedInstance().myLocation?.objectID
-        let udateString = OTMClient.sharedInstance().myLocation!.buildUdateString()
+        let objectId = OTMClient.sharedInstance().userLocation?.objectID
+        let udateString = OTMClient.sharedInstance().userLocation!.buildUdateString()
         
         var parameters = "{\(udateString)}"
         //NSJSONSerialization.dataWithJSONObject(userLocation, options: NSJSONWritingOptions.PrettyPrinted, error: &parsingError)
