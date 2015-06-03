@@ -63,6 +63,7 @@ class MapViewController: UIViewController {
         //self.mapView!.reloadInputViews()
         //self.loadInitialData()
         self.mapView!.removeAnnotations(self.pinData)
+        self.loadInitialData()
         self.mapView!.addAnnotations(self.pinData)
     }
     

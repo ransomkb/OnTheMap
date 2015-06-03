@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct StudentLocation {
+class StudentLocation: NSObject {
     
     var objectID = ""
     var createdAt = ""
@@ -40,7 +40,7 @@ struct StudentLocation {
 //    }
     
     init(dictionary: [String:AnyObject]) {
-        studentDictionary = dictionary
+        //studentDictionary = dictionary
         
         if let object = dictionary["objectId"] as? String { objectID = object }
         if let created = dictionary["createdAt"] as? String { createdAt = created }
@@ -54,6 +54,16 @@ struct StudentLocation {
         if let media = dictionary["mediaURL"] as? String { mediaURL = media }
         if let lat = dictionary["latitude"] as? Double { latitude = lat }
         if let long = dictionary["longitude"] as? Double { longitude = long }
+        
+        studentDictionary = [
+            "uniqueKey" : uniqueKey,
+            "firstName" : firstName,
+            "lastName" : lastName,
+            "mapString" : mapString,
+            "mediaURL" : mediaURL,
+            "latitude" : latitude,
+            "longitude" : longitude
+        ]
     }
     
     static func studentLocationsFromResults(results: [[String:AnyObject]]) -> [StudentLocation] {
@@ -64,6 +74,18 @@ struct StudentLocation {
         }
         
         return studentLocations
+    }
+    
+    func updateStudentDictionary() {
+        self.studentDictionary = [
+            "uniqueKey" : uniqueKey,
+            "firstName" : firstName,
+            "lastName" : lastName,
+            "mapString" : mapString,
+            "mediaURL" : mediaURL,
+            "latitude" : latitude,
+            "longitude" : longitude
+        ]
     }
     
     func buildUdateString() -> String {

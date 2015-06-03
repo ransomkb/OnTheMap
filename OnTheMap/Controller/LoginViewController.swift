@@ -15,7 +15,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     /* Based on student comments, this was added to help with smaller resolution devices */
     var keyboardAdjusted = false
-    var lastKeyboardOffset : CGFloat = 0.0
+    var lastKeyboardOffset: CGFloat = 0.0
     
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
