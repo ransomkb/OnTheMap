@@ -116,15 +116,14 @@ extension OTMClient {
                 println("No Error in Search")
                 if let results = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Results) as? [[String:AnyObject]] {
                     println("Got User's Existing StudentLocation.")
-                    self.students = StudentLocation.studentLocationsFromResults(results)
-                    if self.students.isEmpty {
-                        var eString = "User's Existing StudentLocation not found."
-                        //println(eString)
-                        completionHandler(success: true, errorString: eString)
-                    } else {
-                        self.userLocation = self.students[0]
-                        completionHandler(success: true, errorString: nil)
-                    }
+                    
+                    self.userLocation = StudentLocation(dictionary: results[0])
+                    completionHandler(success: true, errorString: nil)
+                    
+                } else {
+                    var eString = "User's Existing StudentLocation not found."
+                    //println(eString)
+                    completionHandler(success: true, errorString: eString)
                 }
             }
         }
@@ -157,27 +156,60 @@ extension OTMClient {
         }
     }
     
+    func createUserLocation(completionHandler: (success: Bool, errorString: String?) -> Void) {
+        println("Creating User Location")
+        
+        let updateString = OTMClient.sharedInstance().userLocation?.buildUdateString()
+        //var parameters = updateString
+        println("POST parameters: \(updateString)")
+        
+        var requestValues = [[String:String]]()
+        requestValues.append([OTMClient.RequestKeys.Value : OTMClient.RequestKeys.ParseApplicationID, OTMClient.RequestKeys.Field : OTMClient.RequestKeys.ParseAppIDField])
+        requestValues.append([OTMClient.RequestKeys.Value : OTMClient.RequestKeys.RESTAPIKey, OTMClient.RequestKeys.Field : OTMClient.RequestKeys.RESTAPIField])
+        requestValues.append([OTMClient.RequestKeys.Value : OTMClient.RequestKeys.ApplicationJSON, OTMClient.RequestKeys.Field : OTMClient.RequestKeys.ContentType])
+        
+        taskForPOSTMethod(false, baseURL: BaseURLs.ParseBaseURLSecure, method: Methods.StudentLocation, parameters: updateString!, requestValues: requestValues) { (JSONResult, error) -> Void in
+            
+            println("After POSTing")
+            if let error = error {
+                completionHandler(success: false, errorString: "Error: POST failed. (Create Locations)")
+            } else {
+                println("No Error in Creation POST. Checking JSON")
+                println("Object ID: \(JSONResult[StudentLocationKeys.ObjectID]) was created at: \(StudentLocationKeys.CreatedAt)")
+                completionHandler(success: true, errorString: nil)
+            }
+        }
+    }
+    
     func updateUserLocation(completionHandler: (success: Bool, errorString: String?) -> Void) {
         
         println("Updating User Location.")
         //var parsingError: NSError? = nil
         
         let objectId = OTMClient.sharedInstance().userLocation?.objectID
-        let udateString = OTMClient.sharedInstance().userLocation!.buildUdateString()
+        let updateString = OTMClient.sharedInstance().userLocation!.buildUdateString()
         
-        var parameters = "{\(udateString)}"
+        //var parameters = udateString
         //NSJSONSerialization.dataWithJSONObject(userLocation, options: NSJSONWritingOptions.PrettyPrinted, error: &parsingError)
         
-        println("PUT parameters: \(parameters)")
+        println("PUT parameters: \(updateString)")
         
         var requestValues = [[String:String]]()
         requestValues.append([OTMClient.RequestKeys.Value : OTMClient.RequestKeys.ParseApplicationID, OTMClient.RequestKeys.Field : OTMClient.RequestKeys.ParseAppIDField])
         requestValues.append([OTMClient.RequestKeys.Value : OTMClient.RequestKeys.RESTAPIKey, OTMClient.RequestKeys.Field : OTMClient.RequestKeys.RESTAPIField])
         requestValues.append([OTMClient.RequestKeys.Value : OTMClient.RequestKeys.ApplicationJSON, OTMClient.RequestKeys.Field : OTMClient.RequestKeys.ContentType])
 
-//        taskForPUTMethod(false, baseURL: BaseURLs.ParseBaseURLSecure, method: Methods.StudentLocation, fileName: "/"+objectId!, parameters: parameters, requestValues: requestValues) { (result, error) -> Void in
-//            <#code#>
-//        }
+        taskForPUTMethod(false, baseURL: BaseURLs.ParseBaseURLSecure, method: Methods.StudentLocation, fileName: "/"+objectId!, parameters: updateString, requestValues: requestValues) { (JSONResult, error) -> Void in
+            
+            println("After PUTting")
+            if let error = error {
+                completionHandler(success: false, errorString: "Error: PUT failed. (Update Locations)")
+            } else {
+                println("No Error in Update PUT. Checking JSON")
+                println("User Location was updated at: \(JSONResult[StudentLocationKeys.UpdatedAt])")
+                completionHandler(success: true, errorString: nil)
+            }
+        }
     }
     
 }

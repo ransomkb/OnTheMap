@@ -20,6 +20,7 @@ class MapViewController: UIViewController {
     var pinData = [PinData]()
     var students:[StudentLocation] = [StudentLocation]()
     
+    
     let regionRadius: CLLocationDistance = 4000000
 
     @IBOutlet weak var mapView: MKMapView!
@@ -31,8 +32,7 @@ class MapViewController: UIViewController {
         println("Loading Map View")
         mapView.delegate = self
         
-        let initialLocation = CLLocation(latitude: 39.50, longitude: -98.35)
-        centerMapOnLocation(initialLocation)
+        //myLocation = CLLocation(latitude: 39.50, longitude: -98.35)
         
         // Moved: Did Call this in the completion handler to ensure order of operations
         OTMClient.sharedInstance().getStudentLocations({ (success, errorString) -> Void in
@@ -60,14 +60,17 @@ class MapViewController: UIViewController {
         super.viewWillAppear(animated)
         
         println("View Will Appear")
-        //self.mapView!.reloadInputViews()
-        //self.loadInitialData()
-        self.mapView!.removeAnnotations(self.pinData)
+        println("My Location: \(OTMClient.sharedInstance().myLocation)")
+        centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
+        //self.mapView!.removeAnnotations(self.pinData)
+        self.students = OTMClient.sharedInstance().students
         self.loadInitialData()
+        self.mapView!.removeAnnotations(self.pinData)
         self.mapView!.addAnnotations(self.pinData)
     }
     
     func centerMapOnLocation(location: CLLocation) {
+        println("Centering Map.")
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius * 2.0, regionRadius * 2.0)
         mapView.setRegion(coordinateRegion, animated: true)
     }
@@ -104,6 +107,8 @@ class MapViewController: UIViewController {
                 pinData.append(pinDatum)
                 //self.mapView!.addAnnotation(pinDatum)
             }
+            println("\(pinData)")
+            
         }
     }
 

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 
 
 class OTMClient: NSObject {
@@ -27,6 +28,7 @@ class OTMClient: NSObject {
     var userLat: Double? = 36.9719
     var userLong: Double? = -122.0264
     
+    var myLocation: CLLocation? = CLLocation(latitude: 39.50, longitude: -98.35)
     var userLocation: StudentLocation? = nil
     var students:[StudentLocation] = [StudentLocation]()
     

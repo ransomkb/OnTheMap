@@ -98,6 +98,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    @IBAction func signUp(sender: UIButton) {
+        let detailController = self.storyboard!.instantiateViewControllerWithIdentifier("WebViewController") as! WebViewController
+        
+        let url = NSURL(string: "https://www.udacity.com/account/auth#!/signup")
+        detailController.urlRequest = NSURLRequest(URL: url!)
+        detailController.authenticating = false
+        
+        self.presentViewController(detailController, animated: true, completion: nil)
+        //self.navigationController!.pushViewController(detailController, animated: true)
+    }
+    
     func completeLogin() {
         dispatch_async(dispatch_get_main_queue(), {
             self.debugTextLabel.text = ""

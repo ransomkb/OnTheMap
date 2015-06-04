@@ -14,10 +14,11 @@ import UIKit
 
 class FindLocationViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
     
-    var newLocation: Bool? = true
-    var alertMessage:String?
+    var newLocation: Bool = true
+    var alertMessage: String?
     
     var userLocation: StudentLocation?
+    let regionRadius: CLLocationDistance = 4000000
     var locationManager = CLLocationManager()
     var coordinates: CLLocationCoordinate2D?
     var placemark: CLPlacemark!
@@ -93,29 +94,6 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         return true
     }
     
-    @IBAction func submitMyLocationData(sender: UIButton) {
-        
-        if let text = self.textField.text {
-            
-            self.userLocation!.mediaURL = text
-            
-            println("FindLocation userLocation dictionary: \(self.userLocation?.studentDictionary)")
-            
-            
-            OTMClient.sharedInstance().updateUserLocation({ (success, errorString) -> Void in
-                if success {
-                    println("User Location was updated.")
-                }
-            })
-
-        }
-        self.findButton.hidden = false
-        self.previousLabel.hidden = false
-        self.messageLabel.hidden = false
-        self.mapView.hidden = true
-        self.submitButton.hidden = true
-    }
-    
     @IBAction func findMyLocation(sender: UIButton) {
         
         println("Finding My Location")
@@ -134,6 +112,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                 self.userLocation?.mapString = addressString
                 println("\(self.userLocation!.mapString) ; \(self.userLocation!.latitude) \(self.userLocation!.longitude)")
                 
+                self.setCenterLocation()
+                self.centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
                 
                 self.pinDatum = PinData(title: "\(self.userLocation?.firstName) \(self.userLocation?.lastName)", urlString: "\(self.userLocation?.mediaURL)", coordinate: self.coordinates!)
                 self.mapView.addAnnotation(self.pinDatum)
@@ -143,8 +123,101 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                 self.messageLabel.hidden = true
                 self.mapView.hidden = false
                 self.submitButton.hidden = false
+                
+                self.textField.text = "http://www.google.com"
             }
         })
+    }
+    
+    @IBAction func submitMyLocationData(sender: UIButton) {
+        
+        if let text = self.textField.text {
+            
+            self.userLocation!.mediaURL = text
+            
+            println("FindLocation userLocation dictionary pre-update: \(self.userLocation?.studentDictionary)")
+            self.userLocation!.updateStudentDictionary()
+            println("FindLocation userLocation dictionary post-update: \(self.userLocation?.studentDictionary)")
+            OTMClient.sharedInstance().userLocation = self.userLocation
+            
+            if newLocation {
+                OTMClient.sharedInstance().createUserLocation({ (success, errorString) -> Void in
+                    if success {
+                        println("User Location was created.")
+                        self.returnToRootController()
+                    } else {
+                        println(errorString)
+                    }
+                })
+            } else {
+                OTMClient.sharedInstance().updateUserLocation({ (success, errorString) -> Void in
+                    if success {
+                        println("User Location was updated.")
+                        self.returnToRootController()
+                    } else {
+                        println(errorString)
+                        //self.returnToRootController()
+                    }
+                    
+                })
+            }
+            
+            //self.returnToRootController()
+            
+        } else {
+            // add some warning of failure message
+            self.previousLabel.text = "Please try again."
+        }
+        
+        
+        self.findButton.hidden = false
+        self.previousLabel.hidden = false
+        self.messageLabel.hidden = false
+        self.mapView.hidden = true
+        self.submitButton.hidden = true
+    }
+    
+    func centerMapOnLocation(location: CLLocation) {
+        println("Centering Map.")
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius * 2.0, regionRadius * 2.0)
+        mapView.setRegion(coordinateRegion, animated: true)
+    }
+    
+    func setCenterLocation() {
+        OTMClient.sharedInstance().myLocation = CLLocation(latitude: OTMClient.sharedInstance().userLocation!.latitude, longitude: OTMClient.sharedInstance().userLocation!.longitude)
+    }
+    
+    func returnToRootController() {
+        println("Preparing to return to Map View Controller.")
+        //let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+        //let mapViewController = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
+        
+        //OTMClient.sharedInstance().myLocation = CLLocation(latitude: OTMClient.sharedInstance().userLocation!.latitude, longitude: OTMClient.sharedInstance().userLocation!.longitude)
+        //setPinDatum()
+        //mapViewController.mapView.addAnnotation(pinDatum)
+        
+        // Moved: Did Call this in the completion handler to ensure order of operations
+        OTMClient.sharedInstance().getStudentLocations({ (success, errorString) -> Void in
+            if success {
+                println("Done Getting Student Locations")
+                if (errorString == nil) {
+                    //mapViewController.students = OTMClient.sharedInstance().students
+                    println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations.")
+                    self.setCenterLocation()
+                    
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.navigationController!.popToRootViewControllerAnimated(true)
+                    }
+                } else {
+                    println("\(errorString!)")
+                }
+            }
+        })
+
+    
+        //self.navigationController!.popToRootViewControllerAnimated(true)
+        //self.navigationController!.popToViewController(controller, animated: true)
+        //self.presentViewController(mapViewController, animated: true, completion: nil)
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {

@@ -37,6 +37,12 @@ class WebViewController: UIViewController, UIWebViewDelegate {
             self.webView.loadRequest(urlRequest!)
         }
     }
+    @IBAction func closeWebView(sender: UIBarButtonItem) {
+        
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+        
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
     
     // To be completed for Facebook Authentication
     
