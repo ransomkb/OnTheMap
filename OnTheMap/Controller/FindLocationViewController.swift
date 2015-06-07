@@ -34,6 +34,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     @IBOutlet weak var findButton: UIButton!
     @IBOutlet weak var submitButton: UIButton!
     
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -86,6 +88,12 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     override func viewWillDisappear(animated: Bool) {
         locationManager.stopUpdatingLocation()
         
+        self.findButton.hidden = false
+        self.previousLabel.hidden = false
+        self.messageLabel.hidden = false
+        self.mapView.hidden = true
+        self.submitButton.hidden = true
+
         super.viewWillDisappear(animated)
     }
     
@@ -94,44 +102,56 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         return true
     }
     
+    @IBAction func cancelActivities(sender: AnyObject) {
+        
+    }
+    
     @IBAction func findMyLocation(sender: UIButton) {
         
         println("Finding My Location")
-        let geoCoder = CLGeocoder()
-        let addressString = self.textField.text
-        
-        geoCoder.geocodeAddressString(addressString, completionHandler: { (placemarks:[AnyObject]!, error:NSError!) -> Void in
-            if let anError = error {
-                println("GeoCode Failed with Error: \(anError.localizedDescription)")
-            } else if placemarks.count > 0 {
-                let place = placemarks[0] as! CLPlacemark
-                let location = place.location
-                self.coordinates = location.coordinate
-                self.userLocation?.latitude = self.coordinates!.latitude
-                self.userLocation?.longitude = self.coordinates!.longitude
-                self.userLocation?.mapString = addressString
-                println("\(self.userLocation!.mapString) ; \(self.userLocation!.latitude) \(self.userLocation!.longitude)")
-                
-                self.setCenterLocation()
-                self.centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
-                
-                self.pinDatum = PinData(title: "\(self.userLocation?.firstName) \(self.userLocation?.lastName)", urlString: "\(self.userLocation?.mediaURL)", coordinate: self.coordinates!)
-                self.mapView.addAnnotation(self.pinDatum)
-                
-                self.findButton.hidden = true
-                self.previousLabel.hidden = true
-                self.messageLabel.hidden = true
-                self.mapView.hidden = false
-                self.submitButton.hidden = false
-                
-                self.textField.text = "http://www.google.com"
-            }
-        })
+        if !self.textField.text.isEmpty {
+            let addressString = self.textField.text
+            let geoCoder = CLGeocoder()
+            geoCoder.geocodeAddressString(addressString, completionHandler: { (placemarks:[AnyObject]!, error:NSError!) -> Void in
+                if let anError = error {
+                    println("GeoCode Failed with Error: \(anError.localizedDescription)")
+                } else if placemarks.count > 0 {
+                    let place = placemarks[0] as! CLPlacemark
+                    let location = place.location
+                    self.coordinates = location.coordinate
+                    self.userLocation?.latitude = self.coordinates!.latitude
+                    self.userLocation?.longitude = self.coordinates!.longitude
+                    self.userLocation?.mapString = addressString
+                    println("\(self.userLocation!.mapString) ; \(self.userLocation!.latitude) \(self.userLocation!.longitude)")
+                    
+                    self.setCenterLocation()
+                    self.centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
+                    
+                    self.pinDatum = PinData(title: "\(self.userLocation?.firstName) \(self.userLocation?.lastName)", urlString: "\(self.userLocation?.mediaURL)", coordinate: self.coordinates!)
+                    self.mapView.addAnnotation(self.pinDatum)
+                    
+                    self.findButton.hidden = true
+                    self.previousLabel.hidden = true
+                    self.messageLabel.hidden = true
+                    self.mapView.hidden = false
+                    self.submitButton.hidden = false
+                    
+                    self.textField.text = "http://www.google.com"
+                }
+            })
+        } else {
+            self.alertMessage = "The Text Field was empty. Please enter a location such as Osaka, Japan or Santa Cruz, CA."
+            self.alertUser()
+        }
     }
     
     @IBAction func submitMyLocationData(sender: UIButton) {
         
-        if let text = self.textField.text {
+        if !self.textField.text.isEmpty {
+            let text = self.textField.text
+            NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                self.activityIndicatorView.startAnimating()
+            }
             
             self.userLocation!.mediaURL = text
             
@@ -146,7 +166,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                         println("User Location was created.")
                         self.returnToRootController()
                     } else {
-                        println(errorString)
+                        self.alertMessage = errorString
+                        self.alertUser()
                     }
                 })
             } else {
@@ -155,26 +176,18 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                         println("User Location was updated.")
                         self.returnToRootController()
                     } else {
-                        println(errorString)
-                        //self.returnToRootController()
+                        self.alertMessage = errorString
+                        self.alertUser()
                     }
-                    
                 })
             }
-            
-            //self.returnToRootController()
-            
         } else {
-            // add some warning of failure message
+            self.activityIndicatorView.stopAnimating()
             self.previousLabel.text = "Please try again."
+            self.alertMessage = "The Text Field was empty. Please enter a URL such as www.google.com"
+            self.alertUser()
         }
         
-        
-        self.findButton.hidden = false
-        self.previousLabel.hidden = false
-        self.messageLabel.hidden = false
-        self.mapView.hidden = true
-        self.submitButton.hidden = true
     }
     
     func centerMapOnLocation(location: CLLocation) {
@@ -189,35 +202,26 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     
     func returnToRootController() {
         println("Preparing to return to Map View Controller.")
-        //let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
-        //let mapViewController = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
-        
-        //OTMClient.sharedInstance().myLocation = CLLocation(latitude: OTMClient.sharedInstance().userLocation!.latitude, longitude: OTMClient.sharedInstance().userLocation!.longitude)
-        //setPinDatum()
-        //mapViewController.mapView.addAnnotation(pinDatum)
-        
-        // Moved: Did Call this in the completion handler to ensure order of operations
         OTMClient.sharedInstance().getStudentLocations({ (success, errorString) -> Void in
             if success {
                 println("Done Getting Student Locations")
                 if (errorString == nil) {
-                    //mapViewController.students = OTMClient.sharedInstance().students
                     println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations.")
                     self.setCenterLocation()
                     
                     NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.navigationController!.popToRootViewControllerAnimated(true)
+                        self.activityIndicatorView.stopAnimating()
+                        //self.navigationController!.popToRootViewControllerAnimated(true)
+                        
+                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+                        self.presentViewController(controller, animated: true, completion: nil)
                     }
                 } else {
-                    println("\(errorString!)")
+                    self.alertMessage = errorString
+                    self.alertUser()
                 }
             }
         })
-
-    
-        //self.navigationController!.popToRootViewControllerAnimated(true)
-        //self.navigationController!.popToViewController(controller, animated: true)
-        //self.presentViewController(mapViewController, animated: true, completion: nil)
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
@@ -225,7 +229,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: { (placemarks, error) -> Void in
             if (error != nil) {
                 var errorString = "Reverse geocoder failed with error: " + error.localizedDescription
-                println(errorString)
+                self.alertMessage = errorString
+                self.alertUser()
                 self.previousLabel.text = errorString
                 return
             }
@@ -251,29 +256,25 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
         
         var errorString = "Error while updating location " + error.localizedDescription
-        println(errorString)
+        self.alertMessage = errorString
+        self.alertUser()
         previousLabel.text = errorString
     }
     
-//    func showMap() {
-//        let place = MKPlacemark(coordinate: self.coordinates!, addressDictionary: nil)
-//        let mapItem = MKMapItem(placemark: place)
-//        mapItem.o
-//    }
-    
     func alertUser() {
-        let alertController = UIAlertController()
-        alertController.title = "Problem"
-        if let message = alertMessage {
-            alertController.message = message
-        }
-        
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
-        alertController.addAction(okAction)
-        self.presentViewController(alertController, animated: true, completion: nil)
-        
+        dispatch_async(dispatch_get_main_queue(), {
+            let alertController = UIAlertController(title: "Problem", message: self.alertMessage, preferredStyle: .Alert)
+            //alertController.title = "Problem"
+            if let message = self.alertMessage {
+                alertController.message = message
+            }
+            
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
+                //self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            alertController.addAction(okAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
     }
     
     func checkLocationAuthorizationStatus() {

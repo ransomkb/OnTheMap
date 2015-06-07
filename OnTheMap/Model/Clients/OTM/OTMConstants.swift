@@ -50,6 +50,9 @@ extension OTMClient {
     }
     
     struct JSONResponseKeys {
+        static let Status = "status"
+        static let Error = "error"
+        
         static let Account = "account"
         static let Registered = "registered"
         static let AccountKey = "key"

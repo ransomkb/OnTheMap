@@ -35,8 +35,8 @@ extension OTMClient {
     func getAccountKey(completionHandler: (success: Bool, errorString: String?) -> Void) {
         
         println("Getting Account Key.")
-        var parameters = OTMClient.substituteKeyInMethod(OTMClient.URLKeys.AuthenticationDictionary, key: OTMClient.URLKeys.UID, value: self.userID!)
-        parameters = OTMClient.substituteKeyInMethod(parameters!, key: OTMClient.URLKeys.PWD, value: self.password!)
+        var parameters = OTMClient.substituteKeyInMethod(OTMClient.URLKeys.AuthenticationDictionary, key: OTMClient.URLKeys.UID, value: self.userID)
+        parameters = OTMClient.substituteKeyInMethod(parameters!, key: OTMClient.URLKeys.PWD, value: self.password)
         println("Before Task parameters: \(parameters!)")
         
         var requestValues = [[String:String]]()
@@ -45,35 +45,41 @@ extension OTMClient {
         
         taskForPOSTMethod(true, baseURL:BaseURLs.UdacityBaseURLSecure, method: OTMClient.Methods.Session, parameters: parameters!, requestValues: requestValues) { (JSONResult, error) -> Void in
             if let error = error {
-                completionHandler(success: false, errorString: "Error: Log In Failed. (Account Key / Session ID)")
+                completionHandler(success: false, errorString: "Error: Log In Failed. (Account Key / Session ID). \(error.localizedDescription)")
             } else {
-                println("Task, no Error")
-                if let account = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Account) as? NSDictionary  {
-                    println("Account Dictionary: \(account)")
-                    if let accountK = account[OTMClient.JSONResponseKeys.AccountKey] as? String {
-                        //accountK = "1612749455"
-                        println("Account Key: \(accountK)")
-                        self.accountKey = accountK
-                    } else {
-                        println("Sorry, JSONResult did not have key: key.")
+                if let status = JSONResult[JSONResponseKeys.Status] as? NSNumber {
+                    if let JSONError: AnyObject? = JSONResult[JSONResponseKeys.Error] {
+                        completionHandler(success: false, errorString: "Status: \(status), Error: \(JSONError)")
                     }
                 } else {
-                    println("Sorry, JSONResult did not have key: account.")
-                }
-                
-                if let session = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Session) as? NSDictionary {
-                    println("Session Dictionary: \(session)")
-                    if let id = session[OTMClient.JSONResponseKeys.SessionID] as? String {
-                        println("Session ID: \(id)")
-                        self.sessionID = id
+                    println("Task, no Error")
+                    if let account = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Account) as? NSDictionary  {
+                        println("Account Dictionary: \(account)")
+                        if let accountK = account[OTMClient.JSONResponseKeys.AccountKey] as? String {
+                            //accountK = "1612749455"
+                            println("Account Key: \(accountK)")
+                            self.accountKey = accountK
+                        } else {
+                            println("Sorry, JSONResult did not have key: key.")
+                        }
                     } else {
-                        println("Sorry, JSONResult did not have key: id.")
+                        println("Sorry, JSONResult did not have key: account.")
                     }
-                } else {
-                    println("Sorry, JSONResult did not have key: session.")
+                    
+                    if let session = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Session) as? NSDictionary {
+                        println("Session Dictionary: \(session)")
+                        if let id = session[OTMClient.JSONResponseKeys.SessionID] as? String {
+                            println("Session ID: \(id)")
+                            self.sessionID = id
+                        } else {
+                            println("Sorry, JSONResult did not have key: id.")
+                        }
+                    } else {
+                        println("Sorry, JSONResult did not have key: session.")
+                    }
+                    
+                    completionHandler(success: true, errorString: nil)
                 }
-                
-                completionHandler(success: true, errorString: nil)
             }
         }
     }
@@ -84,12 +90,12 @@ extension OTMClient {
         taskForGETMethod(true, baseURL: BaseURLs.UdacityBaseURLSecure, method: Methods.UsersUserID, parameters: "/"+self.accountKey!, requestValues: []) { (JSONResult, error) -> Void in
             
             if let error = error {
-                completionHandler(success: false, errorString: "Error: Search failed. (Get User Data)")
+                completionHandler(success: false, errorString: "Error: Search failed. (Get User Data). \(error.localizedDescription)")
             } else {
                 println("No Error in Search")
                 if let user = JSONResult.valueForKey(OTMClient.JSONResponseKeys.User) as? [String:AnyObject] {
-                    self.lastName = user[OTMClient.JSONResponseKeys.LastName] as? String
-                    self.firstName = user[OTMClient.JSONResponseKeys.FirstName] as? String
+                    OTMClient.sharedInstance().lastName = user[OTMClient.JSONResponseKeys.LastName] as? String
+                    OTMClient.sharedInstance().firstName = user[OTMClient.JSONResponseKeys.FirstName] as? String
                     
                     completionHandler(success: true, errorString: nil)
                 } else {
@@ -111,7 +117,7 @@ extension OTMClient {
         
         taskForGETMethod(false, baseURL:BaseURLs.ParseBaseURLSecure, method: OTMClient.Methods.StudentLocation, parameters: parameters!, requestValues: requestValues) { (JSONResult, error) -> Void in
             if let error = error {
-                completionHandler(success: false, errorString: "Error: Search failed. (Existing Location)")
+                completionHandler(success: false, errorString: "Error: Search failed. (Existing Location). \(error.localizedDescription)")
             } else {
                 println("No Error in Search")
                 if let results = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Results) as? [[String:AnyObject]] {
@@ -139,7 +145,7 @@ extension OTMClient {
         
         taskForGETMethod(false, baseURL: BaseURLs.ParseBaseURLSecure, method: OTMClient.Methods.StudentLocation, parameters: parameters, requestValues: requestValues) { (JSONResult, error) -> Void in
             if let error = error {
-                completionHandler(success: false, errorString: "Error: Search failed. (Student Locations)")
+                completionHandler(success: false, errorString: "Error: Search failed. (Student Locations). \(error.localizedDescription)")
             } else {
                 println("No Error in Search")
                 if let results = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Results) as? [[String:AnyObject]] {
@@ -172,7 +178,7 @@ extension OTMClient {
             
             println("After POSTing")
             if let error = error {
-                completionHandler(success: false, errorString: "Error: POST failed. (Create Locations)")
+                completionHandler(success: false, errorString: "Error: POST failed. (Create Locations). \(error.localizedDescription)")
             } else {
                 println("No Error in Creation POST. Checking JSON")
                 println("Object ID: \(JSONResult[StudentLocationKeys.ObjectID]) was created at: \(StudentLocationKeys.CreatedAt)")
@@ -203,7 +209,7 @@ extension OTMClient {
             
             println("After PUTting")
             if let error = error {
-                completionHandler(success: false, errorString: "Error: PUT failed. (Update Locations)")
+                completionHandler(success: false, errorString: "Error: PUT failed. (Update Locations). \(error.localizedDescription)")
             } else {
                 println("No Error in Update PUT. Checking JSON")
                 println("User Location was updated at: \(JSONResult[StudentLocationKeys.UpdatedAt])")

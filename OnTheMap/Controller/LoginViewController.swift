@@ -11,6 +11,7 @@ import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
+    var alertMessage: String?
     var tapRecognizer: UITapGestureRecognizer? = nil
     
     /* Based on student comments, this was added to help with smaller resolution devices */
@@ -54,42 +55,54 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func loginUser(sender: AnyObject) {
-        activityIndicatorView.startAnimating()
-//        if let userID = emailTextField.text {
-//            if userID.isEmpty {
-//                // send message to user to complete field
-//            } else {
-//                OTMClient.sharedInstance().userID = userID
-//            }
-//        }
-//        
-//        if let password = passwordTextField.text {
-//            if password.isEmpty {
-//                // send message to user to complete field
-//            } else {
-//                OTMClient.sharedInstance().password = password
-//            }
-//        }
+        println("Log in button was clicked.")
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.activityIndicatorView.startAnimating()
+        }
         
-        OTMClient.sharedInstance().authenticateWithLogIn(self, completionHandler: { (success, errorString) -> Void in
-            
-            if success {
-                self.activityIndicatorView.stopAnimating()
-                
-                println("Authentication with Log In was successful!")
-                println("Account Key: \(OTMClient.sharedInstance().accountKey!)")
-                println("Last Name: \(OTMClient.sharedInstance().lastName!)")
-                println("First Name: \(OTMClient.sharedInstance().firstName!)")
-                
-                println(" Prepare to segue.")
-                NSOperationQueue.mainQueue().addOperationWithBlock {
-                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
-                    self.presentViewController(controller, animated: true, completion: nil)
-                }
+        
+        if let userID = emailTextField.text {
+            if userID.isEmpty {
+                // send message to user to complete field
+                self.alertMessage = "Please enter an email address for the User ID."
+                self.alertUser()
             } else {
-                self.displayError(errorString)
+                if let password = passwordTextField.text {
+                    if password.isEmpty {
+                        // send message to user to complete field
+                        self.alertMessage = "Please enter a password."
+                        self.alertUser()
+                    } else {
+                        OTMClient.sharedInstance().userID = "ransomkb@icloud.com" //userID
+                        OTMClient.sharedInstance().password = "Okonomiyuki80" //password
+                        OTMClient.sharedInstance().authenticateWithLogIn(self, completionHandler: { (success, errorString) -> Void in
+                            
+                            if success {
+                                self.activityIndicatorView.stopAnimating()
+                                
+                                println("Authentication with Log In was successful!")
+                                println("Account Key: \(OTMClient.sharedInstance().accountKey!)")
+                                println("Last Name: \(OTMClient.sharedInstance().lastName!)")
+                                println("First Name: \(OTMClient.sharedInstance().firstName!)")
+                                
+                                println(" Prepare to segue.")
+                                NSOperationQueue.mainQueue().addOperationWithBlock {
+                                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+                                    self.presentViewController(controller, animated: true, completion: nil)
+                                }
+                            } else {
+                                dispatch_async(dispatch_get_main_queue(), {
+                                    println(errorString!)
+                                    self.alertMessage = errorString!
+                                    self.alertUser()
+                                    //self.displayError(errorString)
+                                }
+                            )}
+                        })
+                    }
+                }
             }
-        })
+        }
         
         activityIndicatorView.stopAnimating()
     }
@@ -106,9 +119,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         detailController.authenticating = false
         
         self.presentViewController(detailController, animated: true, completion: nil)
-        //self.navigationController!.pushViewController(detailController, animated: true)
     }
-    
+        
     func completeLogin() {
         dispatch_async(dispatch_get_main_queue(), {
             self.debugTextLabel.text = ""
@@ -117,6 +129,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         })
     }
     
+    func alertUser() {
+        dispatch_async(dispatch_get_main_queue(), {
+            self.activityIndicatorView.stopAnimating()
+            
+            let alertController = UIAlertController(title: "Problem", message: self.alertMessage!, preferredStyle: .Alert)
+            
+            if let message = self.alertMessage {
+                alertController.message = message
+            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            alertController.addAction(okAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
+    }
+    
+    // Maybe don't need
     func displayError(errorString: String?) {
         dispatch_async(dispatch_get_main_queue(), {
             if let errorString = errorString {
@@ -140,8 +170,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func handleSingleTap(recognizer: UITapGestureRecognizer) {
         self.view.endEditing(true)
     }
-    
-    
     
 }
 

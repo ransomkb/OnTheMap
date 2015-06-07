@@ -52,8 +52,6 @@ class MapViewController: UIViewController {
                 }
             }
         })
-
-        //self.mapView!.addAnnotations(self.pinData)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -62,7 +60,6 @@ class MapViewController: UIViewController {
         println("View Will Appear")
         println("My Location: \(OTMClient.sharedInstance().myLocation)")
         centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
-        //self.mapView!.removeAnnotations(self.pinData)
         self.students = OTMClient.sharedInstance().students
         self.loadInitialData()
         self.mapView!.removeAnnotations(self.pinData)

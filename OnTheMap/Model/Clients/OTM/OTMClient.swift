@@ -15,8 +15,8 @@ class OTMClient: NSObject {
     var session: NSURLSession
     
     // Change these back to nil later
-    var userID: String? = "ransomkb@icloud.com"
-    var password: String? = "Okonomiyuki80"
+    var userID: String = ""
+    var password: String = ""
     
     var accountKey: String? = nil
     var sessionID: String? = nil
@@ -194,7 +194,7 @@ class OTMClient: NSObject {
     class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
         if let parsedResult = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String:AnyObject] {
             
-            // maybe don't need this
+            // Do need this; finish it better.
             return error
         }
         
