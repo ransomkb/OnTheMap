@@ -119,20 +119,22 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
             let geoCoder = CLGeocoder()
             geoCoder.geocodeAddressString(addressString, completionHandler: { (placemarks:[AnyObject]!, error:NSError!) -> Void in
                 if let anError = error {
-                    println("GeoCode Failed with Error: \(anError.localizedDescription)")
+                    self.alertMessage = "GeoCode Failed with Error: \(anError.localizedDescription)"
+                    self.alertUser()
+                    println(self.alertMessage)
                 } else if placemarks.count > 0 {
                     let place = placemarks[0] as! CLPlacemark
                     let location = place.location
                     self.coordinates = location.coordinate
-                    self.userLocation?.latitude = self.coordinates!.latitude
-                    self.userLocation?.longitude = self.coordinates!.longitude
-                    self.userLocation?.mapString = addressString
+                    self.userLocation!.latitude = self.coordinates!.latitude
+                    self.userLocation!.longitude = self.coordinates!.longitude
+                    self.userLocation!.mapString = addressString
                     println("\(self.userLocation!.mapString) ; \(self.userLocation!.latitude) \(self.userLocation!.longitude)")
                     
                     self.setCenterLocation()
                     self.centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
                     
-                    self.pinDatum = PinData(title: "\(self.userLocation?.firstName) \(self.userLocation?.lastName)", urlString: "\(self.userLocation?.mediaURL)", coordinate: self.coordinates!)
+                    self.pinDatum = PinData(title: "\(self.userLocation!.firstName) \(self.userLocation!.lastName)", urlString: "\(self.userLocation!.mediaURL)", coordinate: self.coordinates!)
                     self.mapView.addAnnotation(self.pinDatum)
                     
                     self.findButton.hidden = true
@@ -161,8 +163,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
             self.userLocation!.mediaURL = text
             
             println("FindLocation userLocation dictionary pre-update: \(self.userLocation?.studentDictionary)")
-            self.userLocation!.updateStudentDictionary()
-            println("FindLocation userLocation dictionary post-update: \(self.userLocation?.studentDictionary)")
+            //self.userLocation!.studentDictionary[]
+            //println("FindLocation userLocation dictionary post-update: \(self.userLocation?.studentDictionary)")
             OTMClient.sharedInstance().userLocation = self.userLocation
             
             if newLocation {
