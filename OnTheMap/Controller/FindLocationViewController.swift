@@ -103,7 +103,12 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     }
     
     @IBAction func cancelActivities(sender: AnyObject) {
-        
+        NSOperationQueue.mainQueue().addOperationWithBlock {
+            self.activityIndicatorView.stopAnimating()
+            
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
     }
     
     @IBAction func findMyLocation(sender: UIButton) {
