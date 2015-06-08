@@ -18,7 +18,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     var alertMessage: String?
     
     var userLocation: StudentLocation?
-    let regionRadius: CLLocationDistance = 4000000
+    let regionRadius: CLLocationDistance = 40000
     var locationManager = CLLocationManager()
     var coordinates: CLLocationCoordinate2D?
     var placemark: CLPlacemark!
@@ -162,10 +162,10 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
             
             self.userLocation!.mediaURL = text
             
-            println("FindLocation userLocation dictionary pre-update: \(self.userLocation?.studentDictionary)")
+            println("FindLocation userLocation dictionary: \(self.userLocation!.studentDictionary)")
             //self.userLocation!.studentDictionary[]
-            //println("FindLocation userLocation dictionary post-update: \(self.userLocation?.studentDictionary)")
-            OTMClient.sharedInstance().userLocation = self.userLocation
+            println("FindLocation userLocation mediaURL: \(self.userLocation!.mediaURL)")
+            OTMClient.sharedInstance().userLocation = self.userLocation!
             
             if newLocation {
                 OTMClient.sharedInstance().createUserLocation({ (success, errorString) -> Void in
@@ -215,12 +215,21 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                 if (errorString == nil) {
                     println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations.")
                     self.setCenterLocation()
+                    OTMClient.sharedInstance().pinDatum = self.pinDatum
                     
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.activityIndicatorView.stopAnimating()
                         //self.navigationController!.popToRootViewControllerAnimated(true)
                         
+//                        let mapController = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
+//                        mapController.pinData.append(self.pinDatum!)
+                        
                         let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+//                        let children = controller.childViewControllers
+//                        for child in children {
+//                            println("Child' \(child.title!)")
+//                            
+//                        }
                         self.presentViewController(controller, animated: true, completion: nil)
                     }
                 } else {

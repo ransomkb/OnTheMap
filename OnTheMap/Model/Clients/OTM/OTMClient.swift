@@ -32,6 +32,9 @@ class OTMClient: NSObject {
     var userLocation: StudentLocation? = nil
     var students:[StudentLocation] = [StudentLocation]()
     
+    // For updating and centering map after user location is set
+    var pinDatum:PinData?
+    
     override init() {
         session = NSURLSession.sharedSession()
         super.init()

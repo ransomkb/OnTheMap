@@ -11,6 +11,8 @@ import UIKit
 
 class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var alertMessage: String?
+    
     var students:[StudentLocation] = [StudentLocation]()
 
     @IBOutlet weak var pinButtonItem: UIBarButtonItem!
@@ -63,6 +65,22 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.navigationController!.pushViewController(detailController, animated: true)
     }
     
+    func alertUser() {
+        dispatch_async(dispatch_get_main_queue(), {
+            let alertController = UIAlertController(title: "Problem", message: self.alertMessage, preferredStyle: .Alert)
+            //alertController.title = "Problem"
+            if let message = self.alertMessage {
+                alertController.message = message
+            }
+            
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
+                //self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            alertController.addAction(okAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
+    }
+
     
 }
 
