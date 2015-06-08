@@ -204,7 +204,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     }
     
     func setCenterLocation() {
-        OTMClient.sharedInstance().myLocation = CLLocation(latitude: OTMClient.sharedInstance().userLocation!.latitude, longitude: OTMClient.sharedInstance().userLocation!.longitude)
+        OTMClient.sharedInstance().myLocation = CLLocation(latitude: self.userLocation!.latitude, longitude: self.userLocation!.longitude)
     }
     
     func returnToRootController() {
@@ -215,6 +215,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                 if (errorString == nil) {
                     println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations.")
                     self.setCenterLocation()
+                    
+                    self.pinDatum = PinData(title: "\(self.userLocation!.firstName) \(self.userLocation!.lastName)", urlString: "\(self.userLocation!.mediaURL)", coordinate: self.coordinates!)
                     OTMClient.sharedInstance().pinDatum = self.pinDatum
                     
                     NSOperationQueue.mainQueue().addOperationWithBlock {

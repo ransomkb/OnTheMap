@@ -72,7 +72,7 @@ class OTMClient: NSObject {
                     newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
                 }
                 
-                println("JSONResult data: \(NSString(data: newData, encoding: NSUTF8StringEncoding)!)")
+                //println("JSONResult data: \(NSString(data: newData, encoding: NSUTF8StringEncoding)!)")
                 OTMClient.parseJSONWithCompletionHandler(newData, completionHandler: completionHandler)
             }
         })
@@ -116,7 +116,7 @@ class OTMClient: NSObject {
                     newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
                 }
                 
-                println("JSONResult data: \(NSString(data: newData, encoding: NSUTF8StringEncoding)!)")
+                //println("JSONResult data: \(NSString(data: newData, encoding: NSUTF8StringEncoding)!)")
                 OTMClient.parseJSONWithCompletionHandler(newData, completionHandler: completionHandler)
             }
         })
