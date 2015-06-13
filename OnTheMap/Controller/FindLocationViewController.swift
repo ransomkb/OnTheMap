@@ -113,6 +113,10 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     
     @IBAction func findMyLocation(sender: UIButton) {
         
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.activityIndicatorView.startAnimating()
+        }
+        
         println("Finding My Location")
         if !self.textField.text.isEmpty {
             let addressString = self.textField.text
@@ -144,12 +148,17 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     self.submitButton.hidden = false
                     
                     self.textField.text = "http://www.google.com"
+                    
+                    self.activityIndicatorView.stopAnimating()
                 }
             })
         } else {
             self.alertMessage = "The Text Field was empty. Please enter a location such as Osaka, Japan or Santa Cruz, CA."
             self.alertUser()
+            self.activityIndicatorView.stopAnimating()
         }
+        
+        
     }
     
     @IBAction func submitMyLocationData(sender: UIButton) {

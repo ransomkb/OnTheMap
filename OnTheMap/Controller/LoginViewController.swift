@@ -107,10 +107,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         activityIndicatorView.stopAnimating()
     }
     
-    @IBAction func loginWithFacebook(sender: AnyObject) {
-        
-    }
-    
     @IBAction func signUp(sender: UIButton) {
         let detailController = self.storyboard!.instantiateViewControllerWithIdentifier("WebViewController") as! WebViewController
         

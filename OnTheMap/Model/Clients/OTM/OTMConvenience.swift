@@ -49,7 +49,7 @@ extension OTMClient {
             } else {
                 if let status = JSONResult[JSONResponseKeys.Status] as? NSNumber {
                     if let JSONError: AnyObject? = JSONResult[JSONResponseKeys.Error] {
-                        completionHandler(success: false, errorString: "Status: \(status), Error: \(JSONError)")
+                        completionHandler(success: false, errorString: "Status: \(status), Error: \(JSONError!)")
                     }
                 } else {
                     println("Task, no Error")
@@ -59,26 +59,39 @@ extension OTMClient {
                             //accountK = "1612749455"
                             println("Account Key: \(accountK)")
                             self.accountKey = accountK
+                            if let session = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Session) as? NSDictionary {
+                                println("Session Dictionary: \(session)")
+                                if let id = session[OTMClient.JSONResponseKeys.SessionID] as? String {
+                                    println("Session ID: \(id)")
+                                    self.sessionID = id
+                                    completionHandler(success: true, errorString: nil)
+
+                                } else {
+                                    //println("Sorry, JSONResult did not have key: id.")
+                                    let eString = "Sorry, JSONResult did not have key: id."
+                                    println(eString)
+                                    completionHandler(success: false, errorString: eString)
+                                }
+                            } else {
+                                //println("Sorry, JSONResult did not have key: session.")
+                                let eString = "Sorry, JSONResult did not have key: session."
+                                println(eString)
+                                completionHandler(success: false, errorString: eString)
+                            }
+
                         } else {
-                            println("Sorry, JSONResult did not have key: key.")
+                            let eString = "Sorry, JSONResult did not have key: key."
+                            println(eString)
+                            completionHandler(success: false, errorString: eString)
                         }
                     } else {
-                        println("Sorry, JSONResult did not have key: account.")
+                        //println("Sorry, JSONResult did not have key: account.")
+                        let eString = "Sorry, JSONResult did not have key: account."
+                        println(eString)
+                        completionHandler(success: false, errorString: eString)
                     }
                     
-                    if let session = JSONResult.valueForKey(OTMClient.JSONResponseKeys.Session) as? NSDictionary {
-                        println("Session Dictionary: \(session)")
-                        if let id = session[OTMClient.JSONResponseKeys.SessionID] as? String {
-                            println("Session ID: \(id)")
-                            self.sessionID = id
-                        } else {
-                            println("Sorry, JSONResult did not have key: id.")
-                        }
-                    } else {
-                        println("Sorry, JSONResult did not have key: session.")
-                    }
                     
-                    completionHandler(success: true, errorString: nil)
                 }
             }
         }

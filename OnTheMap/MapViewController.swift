@@ -12,26 +12,26 @@ import MapKit
 
 class MapViewController: UIViewController {
     
-    // maybe don't need these
-//    var pinName: String!
-//    var pinLat: String!
-//    var pinLong: String!
+    let manager: ManagerTabBarController = ManagerTabBarController()
     
     
     var alertMessage: String?
     
     var pinData = [PinData]()
-    var students:[StudentLocation] = [StudentLocation]()
-    
+    var students = [StudentLocation]()
+    var navBarButtonItems = [UIBarButtonItem]()
     
     let regionRadius: CLLocationDistance = 4000000
-
+    
+    @IBOutlet weak var refreshButton: UIBarButtonItem!
+    
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        //navBarButtonItems = [self.refreshButton, manager.userLocationButtonItem]
+        //self.navigationItem.rightBarButtonItems = navBarButtonItems
         println("Loading Map View")
         mapView.delegate = self
         
@@ -42,9 +42,9 @@ class MapViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        println("View Will Appear")
-        println("My Location: \(OTMClient.sharedInstance().myLocation)")
+                
+        println("Map View Will Appear")
+        //println("My Location: \(OTMClient.sharedInstance().myLocation)")
         centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
         self.students = OTMClient.sharedInstance().students
         self.loadInitialData()
@@ -55,11 +55,45 @@ class MapViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        
+    }
+    
     func centerMapOnLocation(location: CLLocation) {
         println("Centering Map.")
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius * 2.0, regionRadius * 2.0)
         mapView.setRegion(coordinateRegion, animated: true)
     }
+    
+    
+    func refreshStudentLocations() {
+        OTMClient.sharedInstance().getStudentLocations { (success, errorString) -> Void in
+            if success {
+                println("Refreshed")
+                self.getStudentLocations()
+            } else {
+                println("Couldn't refresh Student Locations.")
+                self.alertMessage = errorString
+                self.alertUser()
+            }
+        }
+    }
+    
+    func segueToFindLocation() {
+        println("Preparing to segue to FindLocation.")
+        
+        let locationController = self.storyboard!.instantiateViewControllerWithIdentifier("FindLocationViewController") as! FindLocationViewController
+        
+        self.presentViewController(locationController, animated: true, completion: nil)
+    }
+
+    
+//    @IBAction func refreshStudentLocations() {
+//        println("Refreshing in Map")
+//        getStudentLocations()
+//    }
     
     func getStudentLocations() {
         // Moved: Did Call this in the completion handler to ensure order of operations
@@ -71,7 +105,7 @@ class MapViewController: UIViewController {
                     println("Retrieved \(self.students.count) Student Locations.")
                     self.loadInitialData()
                     //println(self.pinData)
-                    println("Try to add pins in viewDidLoad.")
+                    //println("Try to add pins in viewDidLoad.")
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.mapView!.addAnnotations(self.pinData)
                     }
@@ -84,27 +118,7 @@ class MapViewController: UIViewController {
         })
     }
     
-    // Example Map Stuff. Got from stackoverflow. Just for testing purposes.
-//    func openMapForPlace() {
-//        var lat1: NSString = self.pinLat
-//        var long1: NSString = self.pinLong
-//        
-//        var latitude: CLLocationDegrees = lat1.doubleValue
-//        var longitude: CLLocationDegrees = long1.doubleValue
-//        
-//        let regionDistance: CLLocationDistance = 10000
-//        var coordinates = CLLocationCoordinate2DMake(latitude, longitude)
-//        let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)
-//        var options = [
-//            MKLaunchOptionsMapCenterKey: NSValue(MKCoordinate: regionSpan.center),
-//            MKLaunchOptionsMapSpanKey: NSValue(MKCoordinateSpan: regionSpan.span)
-//        ]
-//        
-//        var placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
-//        var mapItem = MKMapItem(placemark: placemark)
-//        mapItem.name = "\(self.pinName!)"
-//        mapItem.openInMapsWithLaunchOptions(options)
-//    }
+    //@IBAction
     
     func loadInitialData() {
         
