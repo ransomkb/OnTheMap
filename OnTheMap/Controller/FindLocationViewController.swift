@@ -51,6 +51,10 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     println("Retrieved Existing User's Location.")
                     self.newLocation = false
                     self.userLocation = OTMClient.sharedInstance().userLocation
+                    
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.previousLabel.text = self.userLocation!.mapString
+                    }
                 } else {
                     println("\(errorString!)")
                     let locDictionary = OTMClient.createUserLocation()
@@ -58,8 +62,11 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     
                     println("OTMClient userLocation dictionary: \(OTMClient.sharedInstance().userLocation?.studentDictionary)")
                     self.userLocation = OTMClient.sharedInstance().userLocation
-                    self.previousLabel.text = "Previous: None"
                     self.newLocation = true
+                    
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.previousLabel.text = "No Previous Location"
+                    }
                 }
             }
         })
@@ -105,13 +112,10 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     
     @IBAction func findMyLocation(sender: UIButton) {
         
-        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-            self.activityIndicatorView.startAnimating()
-        }
-        
         println("Finding My Location")
         if !self.textField.text.isEmpty {
-            self.findButton.alpha = 0.5
+            startIndicatingActivity()
+            
             let addressString = self.textField.text
             let geoCoder = CLGeocoder()
             geoCoder.geocodeAddressString(addressString, completionHandler: { (placemarks:[AnyObject]!, error:NSError!) -> Void in
@@ -119,43 +123,44 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     self.alertMessage = "GeoCode Failed with Error: \(anError.localizedDescription)"
                     self.alertUser()
                     println(self.alertMessage)
+                    self.stopIndicatingActivity()
                 } else if placemarks.count > 0 {
                     let place = placemarks[0] as! CLPlacemark
                     let location = place.location
                     self.coordinates = location.coordinate
                     self.userLocation!.latitude = self.coordinates!.latitude
                     self.userLocation!.longitude = self.coordinates!.longitude
-                    self.userLocation!.mapString = addressString
+                    self.userLocation!.mapString = "\(place.locality), \(place.administrativeArea), \(place.country)"
                     println("\(self.userLocation!.mapString) ; \(self.userLocation!.latitude) \(self.userLocation!.longitude)")
                     
                     self.setCenterLocation()
                     self.centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
                     
                     self.pinDatum = PinData(title: "\(self.userLocation!.firstName) \(self.userLocation!.lastName)", urlString: "\(self.userLocation!.mediaURL)", coordinate: self.coordinates!)
-                    self.mapView.addAnnotation(self.pinDatum)
+                    
+                    self.stopIndicatingActivity()
                     
                     self.showLocationUI = false
-                    self.showUI()
                     
-                    self.textField.text = "http://www.google.com"
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.mapView.addAnnotation(self.pinDatum)
+                        self.showUI()
+                    }
                     
-                    self.activityIndicatorView.stopAnimating()
-                    self.findButton.alpha = 1
+                    
+                    self.textField.text = "http://www.apple.com"
                 }
             })
         } else {
             self.alertMessage = "The Text Field was empty. Please enter a location such as Osaka, Japan or Santa Cruz, CA."
             self.alertUser()
-            self.activityIndicatorView.stopAnimating()
-            self.findButton.alpha = 1
         }
-        
-        
     }
     
     @IBAction func submitMyLocationData(sender: UIButton) {
         
         if !self.textField.text.isEmpty {
+            startIndicatingActivity()
             let text = self.textField.text
             
             startIndicatingActivity()
@@ -176,7 +181,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                         self.alertMessage = errorString
                         self.alertUser()
                     }
-                    
+                    self.stopIndicatingActivity()
                 })
             } else {
                 OTMClient.sharedInstance().updateUserLocation({ (success, errorString) -> Void in
@@ -187,10 +192,10 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                         self.alertMessage = errorString
                         self.alertUser()
                     }
+                    self.stopIndicatingActivity()
                 })
             }
         } else {
-            self.activityIndicatorView.stopAnimating()
             self.previousLabel.text = "Please try again."
             self.alertMessage = "The Text Field was empty. Please enter a URL such as www.google.com"
             self.alertUser()
@@ -214,6 +219,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
             if success {
                 println("Done Getting Student Locations")
                 if (errorString == nil) {
+                    
+                    self.stopIndicatingActivity()
                     println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations.")
                     self.setCenterLocation()
                     
@@ -221,7 +228,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     OTMClient.sharedInstance().pinDatum = self.pinDatum
                     
                     NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.activityIndicatorView.stopAnimating()
+                        //self.activityIndicatorView.stopAnimating()
                         //self.navigationController!.popToRootViewControllerAnimated(true)
                         
 //                        let mapController = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController

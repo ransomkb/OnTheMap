@@ -34,7 +34,6 @@ class MapViewController: UIViewController {
     
     var userLocationButtonItem: UIBarButtonItem {
         let pinImage = UIImage(named: "pin")
-        // size is read only pinImage.size = CGSize(width: 20, height: 20)
         return UIBarButtonItem(image: pinImage, style: .Plain, target: self, action: "segueToFindLocation")
     }
     
@@ -57,21 +56,20 @@ class MapViewController: UIViewController {
         
         //myLocation = CLLocation(latitude: 39.50, longitude: -98.35)
         
-       self.getStudentLocations()
+       getStudentLocations()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
                 
         println("Map View Will Appear")
-        navBarButtonItems = [self.refreshButtonItem, self.userLocationButtonItem]
-        self.navigationItem.rightBarButtonItems = navBarButtonItems
-        //println("My Location: \(OTMClient.sharedInstance().myLocation)")
         centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
-        self.students = OTMClient.sharedInstance().students
-        self.loadInitialData()
-        self.mapView!.removeAnnotations(self.pinData)
-        self.mapView!.addAnnotations(self.pinData)
+        
+        //self.students = OTMClient.sharedInstance().students
+        //self.loadInitialData()
+        //self.mapView!.removeAnnotations(self.pinData)
+        //self.mapView!.addAnnotations(self.pinData)
+        
         if let pin = OTMClient.sharedInstance().pinDatum {
             self.mapView!.addAnnotation(pin)
         }
@@ -85,34 +83,7 @@ class MapViewController: UIViewController {
     
     
     func refreshStudentLocations() {
-        OTMClient.sharedInstance().getStudentLocations { (success, errorString) -> Void in
-            if success {
-                println("Refreshing")
-
-                self.students = OTMClient.sharedInstance().students
-                println("Retrieved \(self.students.count) Student Locations.")
-                
-                if let pin = OTMClient.sharedInstance().pinDatum {
-                    let removePinAnnotations = self.mapView!.annotations.filter() {$0 !== OTMClient.sharedInstance().pinDatum}
-                    self.mapView!.removeAnnotations(removePinAnnotations)
-                } else {
-                    self.mapView!.removeAnnotations(self.pinData)
-                }
-                //let removePinAnnotations = self.mapView!.annotations.filter() {$0 !== OTMClient.sharedInstance().pinDatum}
-                //self.mapView!.removeAnnotations(removePinAnnotations)
-                self.loadInitialData()
-                //println(self.pinData)
-                //println("Try to add pins in viewDidLoad.")
-                NSOperationQueue.mainQueue().addOperationWithBlock {
-                    self.mapView!.addAnnotations(self.pinData)
-                }
-                //self.getStudentLocations()
-            } else {
-                println("Couldn't refresh Student Locations.")
-                self.alertMessage = errorString
-                self.alertUser()
-            }
-        }
+        getStudentLocations()
     }
     
     func segueToFindLocation() {
@@ -122,23 +93,21 @@ class MapViewController: UIViewController {
         
         self.presentViewController(locationController, animated: true, completion: nil)
     }
-
-    
-//    @IBAction func refreshStudentLocations() {
-//        println("Refreshing in Map")
-//        getStudentLocations()
-//    }
     
     func getStudentLocations() {
-        // Moved: Did Call this in the completion handler to ensure order of operations
         OTMClient.sharedInstance().getStudentLocations({ (success, errorString) -> Void in
             if success {
                 println("Done Getting Student Locations")
                 if (errorString == nil) {
                     self.students = OTMClient.sharedInstance().students
                     println("Retrieved \(self.students.count) Student Locations.")
-                    let removePinAnnotations = self.mapView!.annotations.filter() {$0 !== OTMClient.sharedInstance().pinDatum}
-                    self.mapView!.removeAnnotations(removePinAnnotations)
+                    if let pin = OTMClient.sharedInstance().pinDatum {
+                        let removePinAnnotations = self.mapView!.annotations.filter() {$0 !== OTMClient.sharedInstance().pinDatum}
+                        self.mapView!.removeAnnotations(removePinAnnotations)
+                    } else {
+                        self.mapView!.removeAnnotations(self.pinData)
+                    }
+
                     self.loadInitialData()
                     //println(self.pinData)
                     //println("Try to add pins in viewDidLoad.")
@@ -153,8 +122,6 @@ class MapViewController: UIViewController {
             }
         })
     }
-    
-    //@IBAction
     
     func loadInitialData() {
         
