@@ -11,22 +11,41 @@ import UIKit
 
 class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let manager: ManagerTabBarController = ManagerTabBarController()
+    //let manager: ManagerTabBarController = ManagerTabBarController()
     
     var alertMessage: String?
     var navBarButtonItems = [UIBarButtonItem]()
     var students:[StudentLocation] = [StudentLocation]()
 
-    @IBOutlet weak var pinButtonItem: UIBarButtonItem!
-    @IBOutlet weak var refreshButton: UIBarButtonItem!    
+    //@IBOutlet weak var navigationItem: UINavigationItem!
+    
+    @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var logOutButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
+    
+    var refreshButtonItem: UIBarButtonItem {
+        return UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "refreshStudentLocations")
+    }
+    
+    var userLocationButtonItem: UIBarButtonItem {
+        let pinImage = UIImage(named: "pin")
+        //pinImage?.size = CGSize(width: 20, height: 20)
+        return UIBarButtonItem(image: pinImage, style: .Plain, target: self, action: "segueToFindLocation")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        var itNum = 0
+        let navIts = self.navigationBar.items
+        for i in navIts {
+            println("\(i) is position \(itNum)")
+        }
         
-        //navBarButtonItems = [self.refreshButton, manager.userLocationButtonItem]
-        //self.navigationItem.rightBarButtonItems = navBarButtonItems
+        var navItem:UINavigationItem = self.navigationBar.items[0] as! UINavigationItem
+        navBarButtonItems = [self.refreshButtonItem, self.userLocationButtonItem]
+        navItem.rightBarButtonItems = navBarButtonItems
+        
         println("Table View did load.")
         tableView.delegate = self
     }
@@ -67,7 +86,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         if let url = NSURL(string: students[indexPath.row].mediaURL) {
             detailController.urlRequest = NSURLRequest(URL: url)
             detailController.authenticating = false
-            self.navigationController!.pushViewController(detailController, animated: true)
+            self.presentViewController(detailController, animated: true, completion: nil)
         } else {
             self.alertMessage = "URL was not well formed."
             self.alertUser()
@@ -79,7 +98,11 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         OTMClient.sharedInstance().getStudentLocations { (success, errorString) -> Void in
             if success {
                 println("Refreshed")
-                self.getStudentLocations()
+                self.students = OTMClient.sharedInstance().students
+                println("Retrieved \(self.students.count) Student Locations.")
+                println("Reloading Data.")
+                self.tableView.reloadData()
+                //self.getStudentLocations()
             } else {
                 println("Couldn't refresh Student Locations.")
                 self.alertMessage = errorString
@@ -137,6 +160,12 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             alertController.addAction(okAction)
             self.presentViewController(alertController, animated: true, completion: nil)
         })
+    }
+    
+    @IBAction func logOut(sender: AnyObject) {
+        OTMClient.sharedInstance().loggedIn = false
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+        self.presentViewController(controller, animated: true, completion: nil)
     }
 
     

@@ -12,6 +12,8 @@ import MapKit
 
 class OTMClient: NSObject {
     
+    var loggedIn = false
+    
     var session: NSURLSession
     
     // Change these back to nil later

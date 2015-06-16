@@ -38,10 +38,13 @@ class WebViewController: UIViewController, UIWebViewDelegate {
         }
     }
     @IBAction func closeWebView(sender: UIBarButtonItem) {
-        
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
-        
-        self.presentViewController(controller, animated: true, completion: nil)
+        if OTMClient.sharedInstance().loggedIn {
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerTabBarController") as! ManagerTabBarController
+            self.presentViewController(controller, animated: true, completion: nil)
+        } else {
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
     }
     
     // To be completed for Facebook Authentication

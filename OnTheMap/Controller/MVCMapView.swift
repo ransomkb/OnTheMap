@@ -40,7 +40,7 @@ extension MapViewController: MKMapViewDelegate {
         webController.urlRequest = request
         webController.authenticating = false
         
-        self.navigationController!.pushViewController(webController, animated: true)
+        self.presentViewController(webController, animated: true, completion: nil)
         
 //        let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
 //        location.mapItem().openInMapsWithLaunchOptions(launchOptions)

@@ -79,6 +79,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                             
                             if success {
                                 self.activityIndicatorView.stopAnimating()
+                                OTMClient.sharedInstance().loggedIn = true
                                 
                                 println("Authentication with Log In was successful!")
                                 println("Account Key: \(OTMClient.sharedInstance().accountKey!)")
@@ -87,7 +88,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 
                                 println(" Prepare to segue.")
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+                                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerTabBarController") as! ManagerTabBarController
                                     self.presentViewController(controller, animated: true, completion: nil)
                                 }
                             } else {

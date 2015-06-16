@@ -14,6 +14,7 @@ import UIKit
 
 class FindLocationViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
     
+    var showLocationUI = true
     var newLocation: Bool = true
     var alertMessage: String?
     
@@ -73,11 +74,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
             textField.text = "\(placemark.locality), \(placemark.administrativeArea)  \(placemark.country)"
         }
         
-        self.findButton.hidden = false
-        self.previousLabel.hidden = false
-        self.messageLabel.hidden = false
-        self.mapView.hidden = true
-        self.submitButton.hidden = true
+        showUI()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -87,13 +84,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     
     override func viewWillDisappear(animated: Bool) {
         locationManager.stopUpdatingLocation()
+        showLocationUI = true
         
-        self.findButton.hidden = false
-        self.previousLabel.hidden = false
-        self.messageLabel.hidden = false
-        self.mapView.hidden = true
-        self.submitButton.hidden = true
-
         super.viewWillDisappear(animated)
     }
     
@@ -106,7 +98,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         NSOperationQueue.mainQueue().addOperationWithBlock {
             self.activityIndicatorView.stopAnimating()
             
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerTabBarController") as! ManagerTabBarController
             self.presentViewController(controller, animated: true, completion: nil)
         }
     }
@@ -119,6 +111,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         
         println("Finding My Location")
         if !self.textField.text.isEmpty {
+            self.findButton.alpha = 0.5
             let addressString = self.textField.text
             let geoCoder = CLGeocoder()
             geoCoder.geocodeAddressString(addressString, completionHandler: { (placemarks:[AnyObject]!, error:NSError!) -> Void in
@@ -141,21 +134,20 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     self.pinDatum = PinData(title: "\(self.userLocation!.firstName) \(self.userLocation!.lastName)", urlString: "\(self.userLocation!.mediaURL)", coordinate: self.coordinates!)
                     self.mapView.addAnnotation(self.pinDatum)
                     
-                    self.findButton.hidden = true
-                    self.previousLabel.hidden = true
-                    self.messageLabel.hidden = true
-                    self.mapView.hidden = false
-                    self.submitButton.hidden = false
+                    self.showLocationUI = false
+                    self.showUI()
                     
                     self.textField.text = "http://www.google.com"
                     
                     self.activityIndicatorView.stopAnimating()
+                    self.findButton.alpha = 1
                 }
             })
         } else {
             self.alertMessage = "The Text Field was empty. Please enter a location such as Osaka, Japan or Santa Cruz, CA."
             self.alertUser()
             self.activityIndicatorView.stopAnimating()
+            self.findButton.alpha = 1
         }
         
         
@@ -165,9 +157,8 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         
         if !self.textField.text.isEmpty {
             let text = self.textField.text
-            NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-                self.activityIndicatorView.startAnimating()
-            }
+            
+            startIndicatingActivity()
             
             self.userLocation!.mediaURL = text
             
@@ -185,6 +176,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                         self.alertMessage = errorString
                         self.alertUser()
                     }
+                    
                 })
             } else {
                 OTMClient.sharedInstance().updateUserLocation({ (success, errorString) -> Void in
@@ -235,7 +227,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
 //                        let mapController = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
 //                        mapController.pinData.append(self.pinDatum!)
                         
-                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerNavigationController") as! UINavigationController
+                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerTabBarController") as! ManagerTabBarController
 //                        let children = controller.childViewControllers
 //                        for child in children {
 //                            println("Child' \(child.title!)")
@@ -249,6 +241,44 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                 }
             }
         })
+    }
+    
+    func showUI() {
+        if showLocationUI {
+            self.findButton.hidden = false
+            self.previousLabel.hidden = false
+            self.messageLabel.hidden = false
+            self.mapView.hidden = true
+            self.submitButton.hidden = true
+        } else {
+            self.findButton.hidden = true
+            self.previousLabel.hidden = true
+            self.messageLabel.hidden = true
+            self.mapView.hidden = false
+            self.submitButton.hidden = false
+        }
+    }
+    
+    func startIndicatingActivity() {
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.activityIndicatorView.startAnimating()
+            self.findButton.alpha = 0.5
+            self.previousLabel.alpha = 0.5
+            self.messageLabel.alpha = 0.5
+            self.mapView.alpha = 0.5
+            self.submitButton.alpha = 0.5
+        }
+    }
+    
+    func stopIndicatingActivity() {
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.activityIndicatorView.stopAnimating()
+            self.findButton.alpha = 1.0
+            self.previousLabel.alpha = 1.0
+            self.messageLabel.alpha = 1.0
+            self.mapView.alpha = 1.0
+            self.submitButton.alpha = 1.0
+        }
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {

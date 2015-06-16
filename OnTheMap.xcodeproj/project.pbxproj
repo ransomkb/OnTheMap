@@ -43,6 +43,7 @@
 		5E4800DB1B07027000BCA0CA /* OTMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800DA1B07027000BCA0CA /* OTMClient.swift */; };
 		5E4800DD1B07028400BCA0CA /* OTMConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800DC1B07028400BCA0CA /* OTMConstants.swift */; };
 		5E4800DF1B07029400BCA0CA /* OTMConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800DE1B07029400BCA0CA /* OTMConvenience.swift */; };
+		5E5C692E1B2FAD7A00D272C8 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 5E5C692D1B2FAD7A00D272C8 /* pin.png */; };
 		5E9C778B1B15386E0023B53B /* MVCMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9C778A1B15386E0023B53B /* MVCMapView.swift */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +98,7 @@
 		5E4800DA1B07027000BCA0CA /* OTMClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMClient.swift; sourceTree = "<group>"; };
 		5E4800DC1B07028400BCA0CA /* OTMConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMConstants.swift; sourceTree = "<group>"; };
 		5E4800DE1B07029400BCA0CA /* OTMConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMConvenience.swift; sourceTree = "<group>"; };
+		5E5C692D1B2FAD7A00D272C8 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 		5E9C778A1B15386E0023B53B /* MVCMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVCMapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -237,6 +239,7 @@
 		5E4800951B06D70800BCA0CA /* images */ = {
 			isa = PBXGroup;
 			children = (
+				5E5C692D1B2FAD7A00D272C8 /* pin.png */,
 				5E4800BA1B06D91400BCA0CA /* OnTheMap_29.png */,
 				5E4800BB1B06D91400BCA0CA /* OnTheMap_40.png */,
 				5E4800BC1B06D91400BCA0CA /* OnTheMap_58.png */,
@@ -355,6 +358,7 @@
 				5E4800AA1B06D70900BCA0CA /* map.pdf in Resources */,
 				5E4800C91B06D91400BCA0CA /* OnTheMap_120.png in Resources */,
 				5E4800CA1B06D91400BCA0CA /* OnTheMap_152.png in Resources */,
+				5E5C692E1B2FAD7A00D272C8 /* pin.png in Resources */,
 				5E4800C51B06D91400BCA0CA /* OnTheMap_40.png in Resources */,
 				5E4800CC1B06D91400BCA0CA /* OnTheMap_512.png in Resources */,
 				5E4800A91B06D70900BCA0CA /* list.pdf in Resources */,

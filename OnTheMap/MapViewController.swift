@@ -12,7 +12,7 @@ import MapKit
 
 class MapViewController: UIViewController {
     
-    let manager: ManagerTabBarController = ManagerTabBarController()
+    //let manager: ManagerTabBarController = ManagerTabBarController()
     
     
     var alertMessage: String?
@@ -23,15 +23,35 @@ class MapViewController: UIViewController {
     
     let regionRadius: CLLocationDistance = 4000000
     
-    @IBOutlet weak var refreshButton: UIBarButtonItem!
+    @IBOutlet weak var navigationBar: UINavigationBar!
     
+        
     @IBOutlet weak var mapView: MKMapView!
+    
+    var refreshButtonItem: UIBarButtonItem {
+        return UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "refreshStudentLocations")
+    }
+    
+    var userLocationButtonItem: UIBarButtonItem {
+        let pinImage = UIImage(named: "pin")
+        // size is read only pinImage.size = CGSize(width: 20, height: 20)
+        return UIBarButtonItem(image: pinImage, style: .Plain, target: self, action: "segueToFindLocation")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        //navBarButtonItems = [self.refreshButton, manager.userLocationButtonItem]
-        //self.navigationItem.rightBarButtonItems = navBarButtonItems
+        
+        var itNum = 0
+        let navIts = self.navigationBar.items
+        for i in navIts {
+            println("\(i) is position \(itNum)")
+        }
+        
+        var navItem:UINavigationItem = self.navigationBar.items[0] as! UINavigationItem
+        navBarButtonItems = [self.refreshButtonItem, self.userLocationButtonItem]
+        navItem.rightBarButtonItems = navBarButtonItems
+        
         println("Loading Map View")
         mapView.delegate = self
         
@@ -44,6 +64,8 @@ class MapViewController: UIViewController {
         super.viewWillAppear(animated)
                 
         println("Map View Will Appear")
+        navBarButtonItems = [self.refreshButtonItem, self.userLocationButtonItem]
+        self.navigationItem.rightBarButtonItems = navBarButtonItems
         //println("My Location: \(OTMClient.sharedInstance().myLocation)")
         centerMapOnLocation(OTMClient.sharedInstance().myLocation!)
         self.students = OTMClient.sharedInstance().students
@@ -53,12 +75,6 @@ class MapViewController: UIViewController {
         if let pin = OTMClient.sharedInstance().pinDatum {
             self.mapView!.addAnnotation(pin)
         }
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        
     }
     
     func centerMapOnLocation(location: CLLocation) {
@@ -71,8 +87,26 @@ class MapViewController: UIViewController {
     func refreshStudentLocations() {
         OTMClient.sharedInstance().getStudentLocations { (success, errorString) -> Void in
             if success {
-                println("Refreshed")
-                self.getStudentLocations()
+                println("Refreshing")
+
+                self.students = OTMClient.sharedInstance().students
+                println("Retrieved \(self.students.count) Student Locations.")
+                
+                if let pin = OTMClient.sharedInstance().pinDatum {
+                    let removePinAnnotations = self.mapView!.annotations.filter() {$0 !== OTMClient.sharedInstance().pinDatum}
+                    self.mapView!.removeAnnotations(removePinAnnotations)
+                } else {
+                    self.mapView!.removeAnnotations(self.pinData)
+                }
+                //let removePinAnnotations = self.mapView!.annotations.filter() {$0 !== OTMClient.sharedInstance().pinDatum}
+                //self.mapView!.removeAnnotations(removePinAnnotations)
+                self.loadInitialData()
+                //println(self.pinData)
+                //println("Try to add pins in viewDidLoad.")
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                    self.mapView!.addAnnotations(self.pinData)
+                }
+                //self.getStudentLocations()
             } else {
                 println("Couldn't refresh Student Locations.")
                 self.alertMessage = errorString
@@ -103,6 +137,8 @@ class MapViewController: UIViewController {
                 if (errorString == nil) {
                     self.students = OTMClient.sharedInstance().students
                     println("Retrieved \(self.students.count) Student Locations.")
+                    let removePinAnnotations = self.mapView!.annotations.filter() {$0 !== OTMClient.sharedInstance().pinDatum}
+                    self.mapView!.removeAnnotations(removePinAnnotations)
                     self.loadInitialData()
                     //println(self.pinData)
                     //println("Try to add pins in viewDidLoad.")
@@ -150,6 +186,12 @@ class MapViewController: UIViewController {
             alertController.addAction(okAction)
             self.presentViewController(alertController, animated: true, completion: nil)
         })
+    }
+    
+    @IBAction func logOut(sender: AnyObject) {
+        OTMClient.sharedInstance().loggedIn = false
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+        self.presentViewController(controller, animated: true, completion: nil)
     }
 
 

@@ -150,7 +150,7 @@ extension OTMClient {
     
     func getStudentLocations(completionHandler: (success: Bool, errorString: String?) -> Void) {
         println("Getting Student Locations")
-        var parameters = "?limit=100"
+        var parameters = "?limit=500"
         
         var requestValues = [[String:String]]()
         requestValues.append([OTMClient.RequestKeys.Value : OTMClient.RequestKeys.ParseApplicationID, OTMClient.RequestKeys.Field : OTMClient.RequestKeys.ParseAppIDField])
