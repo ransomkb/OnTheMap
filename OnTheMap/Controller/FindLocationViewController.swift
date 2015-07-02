@@ -319,10 +319,9 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
         
-        var errorString = "Error while updating location " + error.localizedDescription
-        self.alertMessage = errorString
+        self.alertMessage = "Error while updating location " + error.localizedDescription
         self.alertUser()
-        previousLabel.text = errorString
+        previousLabel.text = self.alertMessage
     }
     
     func alertUser() {
