@@ -50,8 +50,14 @@ extension OTMClient {
     }
     
     struct JSONResponseKeys {
+        // for Udacity
         static let Status = "status"
         static let Error = "error"
+        
+        // for Flickr
+        static let Stat = "stat"
+        static let Code = "code"
+        static let Message = "message"
         
         static let Account = "account"
         static let Registered = "registered"

@@ -36,7 +36,6 @@
 		5E4800CC1B06D91400BCA0CA /* OnTheMap_512.png in Resources */ = {isa = PBXBuildFile; fileRef = 5E4800C21B06D91400BCA0CA /* OnTheMap_512.png */; };
 		5E4800CD1B06D91400BCA0CA /* OnTheMap_1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 5E4800C31B06D91400BCA0CA /* OnTheMap_1024.png */; };
 		5E4800CF1B06DD6700BCA0CA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800CE1B06DD6700BCA0CA /* LoginViewController.swift */; };
-		5E4800D11B06DD9B00BCA0CA /* OTMAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800D01B06DD9B00BCA0CA /* OTMAuthViewController.swift */; };
 		5E4800D31B06E1A800BCA0CA /* FindLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800D21B06E1A800BCA0CA /* FindLocationViewController.swift */; };
 		5E4800D71B07000000BCA0CA /* ManagerTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800D61B07000000BCA0CA /* ManagerTabBarController.swift */; };
 		5E4800D91B07025B00BCA0CA /* StudentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800D81B07025B00BCA0CA /* StudentLocation.swift */; };
@@ -91,7 +90,6 @@
 		5E4800C21B06D91400BCA0CA /* OnTheMap_512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OnTheMap_512.png; sourceTree = "<group>"; };
 		5E4800C31B06D91400BCA0CA /* OnTheMap_1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OnTheMap_1024.png; sourceTree = "<group>"; };
 		5E4800CE1B06DD6700BCA0CA /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		5E4800D01B06DD9B00BCA0CA /* OTMAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMAuthViewController.swift; sourceTree = "<group>"; };
 		5E4800D21B06E1A800BCA0CA /* FindLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindLocationViewController.swift; sourceTree = "<group>"; };
 		5E4800D61B07000000BCA0CA /* ManagerTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerTabBarController.swift; sourceTree = "<group>"; };
 		5E4800D81B07025B00BCA0CA /* StudentLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocation.swift; sourceTree = "<group>"; };
@@ -220,7 +218,6 @@
 				5E4800DC1B07028400BCA0CA /* OTMConstants.swift */,
 				5E4800DA1B07027000BCA0CA /* OTMClient.swift */,
 				5E4800DE1B07029400BCA0CA /* OTMConvenience.swift */,
-				5E4800D01B06DD9B00BCA0CA /* OTMAuthViewController.swift */,
 			);
 			path = OTM;
 			sourceTree = "<group>";
@@ -399,7 +396,6 @@
 				5E4800D71B07000000BCA0CA /* ManagerTabBarController.swift in Sources */,
 				5E4800DF1B07029400BCA0CA /* OTMConvenience.swift in Sources */,
 				5E1E33311B0EE3B7006966E4 /* PinData.swift in Sources */,
-				5E4800D11B06DD9B00BCA0CA /* OTMAuthViewController.swift in Sources */,
 				5E48006F1B06CD5400BCA0CA /* ListViewController.swift in Sources */,
 				5E4800DB1B07027000BCA0CA /* OTMClient.swift in Sources */,
 				5E9C778B1B15386E0023B53B /* MVCMapView.swift in Sources */,

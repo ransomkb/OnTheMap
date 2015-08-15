@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// Use this to view web content via urls.
 class WebViewController: UIViewController, UIWebViewDelegate {
     
     var authenticating: Bool = true
@@ -19,52 +20,55 @@ class WebViewController: UIViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set self as the web view delegate.
         webView.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Set the page title.
         self.navigationItem.title = "Viewing Web Page"
         
+        // Check if page is being used to authenticate with Udacity.
         if authenticating {
+            
+            // Create a standard Cancel and make it a right nav button
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: "cancelAuth")
         } else {
+            
+            // Set the right nav button to nil as not authenticating.
             self.navigationItem.rightBarButtonItem = nil
         }
         
+        // Load the requested URL if it is not nil.
         if urlRequest != nil {
             self.webView.loadRequest(urlRequest!)
         }
     }
+    
+    // Close this page and return to either MapViewController or the log in view controller.
     @IBAction func closeWebView(sender: UIBarButtonItem) {
+        
+        // Check shared OTMClient if logged in.
         if OTMClient.sharedInstance().loggedIn {
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerTabBarController") as! ManagerTabBarController
+            
+            // Create instance of MapViewController on storyboard.
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
+            
+            // Present the ManagerTabBarController.
             self.presentViewController(controller, animated: true, completion: nil)
         } else {
+            
+            // Create instance of LoginViewController on storyboard.
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+            
+            // Present the LoginViewController.
             self.presentViewController(controller, animated: true, completion: nil)
         }
     }
     
-    // To be completed for Facebook Authentication
-    
-    // Appropriate UIWebViewDelegate for this login
-//    func webViewDidFinishLoad(webView: UIWebView) {
-//        
-//        // Check for URL that indicates user consent has been given
-//        if (webView.request!.URL!.absoluteString! == "\(TMDBClient.Constants.AuthorizationURL)\(requestToken!)/allow") {
-//            println("Got to webViewDidFinishLoad:\(TMDBClient.Constants.AuthorizationURL)/allow")
-//            println("\(requestToken!)")
-//            
-//            // Found, so dismiss TMDBAuthViewController
-//            self.dismissViewControllerAnimated(true, completion: { () -> Void in
-//                self.completionHandler!(success: true, errorString: nil)
-//            })
-//        }
-//    }
-
-    
+    // Dismiss this view controller if the Cancel button is pushed.
     func cancelAuth() {
         self.dismissViewControllerAnimated(true, completion: nil)
     }

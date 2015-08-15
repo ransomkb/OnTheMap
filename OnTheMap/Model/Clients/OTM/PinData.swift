@@ -10,7 +10,7 @@ import Foundation
 import AddressBook
 import MapKit
 
-
+// Object to hold all of the data each pin needs.
 class PinData: NSObject, MKAnnotation {
     let title: String
     let urlString: String
@@ -24,18 +24,8 @@ class PinData: NSObject, MKAnnotation {
         super.init()
     }
     
+    // Create computed value from urlString for subtitle value of a pin.
     var subtitle: String {
         return urlString
-    }
-    
-    // practice for learning about map items and placemarks
-    func mapItem() -> MKMapItem {
-        let addressDictionary = [String(kABPersonURLProperty): subtitle]
-        let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: addressDictionary)
-        
-        let mapItem = MKMapItem(placemark: placemark)
-        mapItem.name = title
-        
-        return mapItem
     }
 }

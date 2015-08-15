@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// Handle all the data related to a Student's Location
 struct StudentLocation {
     
     var objectID = ""
@@ -53,6 +54,7 @@ struct StudentLocation {
         ]
     }
     
+    // Create an array of StudentLocation objects from dictionaries received from search results
     static func studentLocationsFromResults(results: [[String:AnyObject]]) -> [StudentLocation] {
         var studentLocations = [StudentLocation]()
         
@@ -63,7 +65,8 @@ struct StudentLocation {
         return studentLocations
     }
     
-    func buildUdateString() -> String {
+    // Create string values for the JSON update dictionary
+    func buildUpdateString() -> String {
         var updateString: String
         updateString = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\":\(longitude)}"
         

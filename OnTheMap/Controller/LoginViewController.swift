@@ -49,6 +49,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
         // Drop keyboard when Return is tapped.
         textField.resignFirstResponder()
         return true
@@ -60,19 +61,25 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             self.activityIndicatorView.startAnimating()
         }
         
-        
+        // Check that user ID text field is empty.
         if let userID = emailTextField.text {
             if userID.isEmpty {
-                // send message to user to complete field
+                
+                // Alert user that field is empty and ask them to complete field.
                 self.alertMessage = "Please enter an email address for the User ID."
                 self.alertUser()
             } else {
+                
+                // Check to see if password field is emplty.
                 if let password = passwordTextField.text {
                     if password.isEmpty {
-                        // send message to user to complete field
+                        
+                        // Alert user that field is empty and ask them to complete field.
                         self.alertMessage = "Please enter a password."
                         self.alertUser()
                     } else {
+                        
+                        // Set userID and password variables, then authenticate.
                         OTMClient.sharedInstance().userID = "ransomkb@icloud.com" //userID
                         OTMClient.sharedInstance().password = "Okonomiyuki80" //password
                         OTMClient.sharedInstance().authenticateWithLogIn(self, completionHandler: { (success, errorString) -> Void in
@@ -86,17 +93,19 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 println("Last Name: \(OTMClient.sharedInstance().lastName!)")
                                 println("First Name: \(OTMClient.sharedInstance().firstName!)")
                                 
+                                // Segue to MapViewController.
                                 println(" Prepare to segue.")
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
                                     let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerTabBarController") as! ManagerTabBarController
                                     self.presentViewController(controller, animated: true, completion: nil)
                                 }
                             } else {
+                                
+                                // Alert user that there was some error when authenticating log in data.
                                 dispatch_async(dispatch_get_main_queue(), {
                                     println(errorString!)
                                     self.alertMessage = errorString!
                                     self.alertUser()
-                                    //self.displayError(errorString)
                                 }
                             )}
                         })
@@ -108,7 +117,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         activityIndicatorView.stopAnimating()
     }
     
+    // Allow user to create a Udacity account by clicking this button.
     @IBAction func signUp(sender: UIButton) {
+        
+        // Prepare to open a WebViewController to Udacity sign up page.
         let detailController = self.storyboard!.instantiateViewControllerWithIdentifier("WebViewController") as! WebViewController
         
         let url = NSURL(string: "https://www.udacity.com/account/auth#!/signup")
@@ -117,53 +129,64 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         self.presentViewController(detailController, animated: true, completion: nil)
     }
-        
-    func completeLogin() {
-        dispatch_async(dispatch_get_main_queue(), {
-            self.debugTextLabel.text = ""
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! UITabBarController
-            self.presentViewController(controller, animated: true, completion: nil)
-        })
-    }
     
+//  seems like it is not needed
+//    func completeLogin() {
+//        dispatch_async(dispatch_get_main_queue(), {
+//            self.debugTextLabel.text = ""
+//            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! UITabBarController
+//            self.presentViewController(controller, animated: true, completion: nil)
+//        })
+//    }
+    
+    // Alert user to any messages and issues.
     func alertUser() {
         dispatch_async(dispatch_get_main_queue(), {
+            
+            // Stop animating log in activity indicator
             self.activityIndicatorView.stopAnimating()
             
             let alertController = UIAlertController(title: "Problem", message: self.alertMessage!, preferredStyle: .Alert)
             
+            // Set the message.
             if let message = self.alertMessage {
                 alertController.message = message
             }
+            
+            // Allow an ok button to dismiss alert.
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
                 self.dismissViewControllerAnimated(true, completion: nil)
             }
+            
             alertController.addAction(okAction)
             self.presentViewController(alertController, animated: true, completion: nil)
         })
     }
     
     // Maybe don't need
-    func displayError(errorString: String?) {
-        dispatch_async(dispatch_get_main_queue(), {
-            if let errorString = errorString {
-                self.debugTextLabel.text = errorString
-            }
-        })
-    }
+//    func displayError(errorString: String?) {
+//        dispatch_async(dispatch_get_main_queue(), {
+//            if let errorString = errorString {
+//                self.debugTextLabel.text = errorString
+//            }
+//        })
+//    }
     
+    // Allow the user to dismiss the keyboard.
     func addKeyboardDismissRecognizer() {
         if let tapper = tapRecognizer {
             self.view.addGestureRecognizer(tapper)
         }
     }
     
+    // Remove recognizer before the segue.
     func removeKeyboardDismissRecognizer() {
         if let tapper = tapRecognizer {
             self.view.removeGestureRecognizer(tapper)
         }
     }
     
+    // Deal with a tap.
     func handleSingleTap(recognizer: UITapGestureRecognizer) {
         self.view.endEditing(true)
     }
@@ -173,6 +196,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
 /* This code has been added in response to student comments */
 extension LoginViewController {
+    
     
     func subscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
