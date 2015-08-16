@@ -96,7 +96,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 // Segue to MapViewController.
                                 println(" Prepare to segue.")
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ManagerTabBarController") as! ManagerTabBarController
+                                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
                                     self.presentViewController(controller, animated: true, completion: nil)
                                 }
                             } else {
