@@ -43,6 +43,7 @@
 		5E4800DF1B07029400BCA0CA /* OTMConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4800DE1B07029400BCA0CA /* OTMConvenience.swift */; };
 		5E5C692E1B2FAD7A00D272C8 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 5E5C692D1B2FAD7A00D272C8 /* pin.png */; };
 		5E9C778B1B15386E0023B53B /* MVCMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9C778A1B15386E0023B53B /* MVCMapView.swift */; };
+		D45F1F8A1B809677007DD4FD /* ManagerTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45F1F891B809677007DD4FD /* ManagerTabBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 		5E4800DE1B07029400BCA0CA /* OTMConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMConvenience.swift; sourceTree = "<group>"; };
 		5E5C692D1B2FAD7A00D272C8 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 		5E9C778A1B15386E0023B53B /* MVCMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVCMapView.swift; sourceTree = "<group>"; };
+		D45F1F891B809677007DD4FD /* ManagerTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerTabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,7 +155,8 @@
 		5E4800681B06CD5400BCA0CA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				5E4800A71B06D70800BCA0CA /* StoryBoards */,
+				5E4800701B06CD5400BCA0CA /* Main.storyboard */,
+				5E4800751B06CD5400BCA0CA /* LaunchScreen.xib */,
 				5E4800731B06CD5400BCA0CA /* Images.xcassets */,
 				5E4800941B06D70800BCA0CA /* on the map assets */,
 				5E4800691B06CD5400BCA0CA /* Info.plist */,
@@ -181,6 +184,7 @@
 		5E4800901B06D70800BCA0CA /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				D45F1F891B809677007DD4FD /* ManagerTabBarController.swift */,
 				5E4800CE1B06DD6700BCA0CA /* LoginViewController.swift */,
 				5E48006C1B06CD5400BCA0CA /* MapViewController.swift */,
 				5E9C778A1B15386E0023B53B /* MVCMapView.swift */,
@@ -250,15 +254,6 @@
 				5E4800A31B06D70800BCA0CA /* udacity.pdf */,
 			);
 			path = images;
-			sourceTree = "<group>";
-		};
-		5E4800A71B06D70800BCA0CA /* StoryBoards */ = {
-			isa = PBXGroup;
-			children = (
-				5E4800701B06CD5400BCA0CA /* Main.storyboard */,
-				5E4800751B06CD5400BCA0CA /* LaunchScreen.xib */,
-			);
-			path = StoryBoards;
 			sourceTree = "<group>";
 		};
 		5E4800A81B06D70800BCA0CA /* View */ = {
@@ -389,6 +384,7 @@
 			files = (
 				5E4800D91B07025B00BCA0CA /* StudentLocation.swift in Sources */,
 				5E4800D31B06E1A800BCA0CA /* FindLocationViewController.swift in Sources */,
+				D45F1F8A1B809677007DD4FD /* ManagerTabBarController.swift in Sources */,
 				5E4800CF1B06DD6700BCA0CA /* LoginViewController.swift in Sources */,
 				5E4800DF1B07029400BCA0CA /* OTMConvenience.swift in Sources */,
 				5E1E33311B0EE3B7006966E4 /* PinData.swift in Sources */,
@@ -427,7 +423,6 @@
 				5E4800711B06CD5400BCA0CA /* Base */,
 			);
 			name = Main.storyboard;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		5E4800751B06CD5400BCA0CA /* LaunchScreen.xib */ = {
@@ -436,7 +431,6 @@
 				5E4800761B06CD5400BCA0CA /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
