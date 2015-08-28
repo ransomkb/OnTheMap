@@ -27,19 +27,12 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     // Another right nav button for setting user's location
     var userLocationButtonItem: UIBarButtonItem {
         let pinImage = UIImage(named: "pin")
-        //pinImage?.size = CGSize(width: 20, height: 20)
+        
         return UIBarButtonItem(image: pinImage, style: .Plain, target: self, action: "segueToFindLocation")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // IMPORTANT: make sure just for testing
-//        var itNum = 0
-//        let navIts = self.navigationBar.items
-//        for i in navIts {
-//            println("\(i) is position \(itNum)")
-//        }
         
         // Add right nav button items to array.
         var navItem:UINavigationItem = self.navigationBar.items[0] as! UINavigationItem
@@ -62,14 +55,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Set array of students to shared students.
         self.students = OTMClient.sharedInstance().students
         
-        // IMPORTANT: probably do not need this
-//        var locID = 0
-//        println("Show students:")
-//        for loc in self.students {
-//            ++locID
-//            println("\(locID) \(loc.objectID) \(loc.firstName) \(loc.lastName) \(loc.mediaURL)")
-//        }
-        
         // Update the data for table view.
         self.tableView.reloadData()
     }
@@ -79,7 +64,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         let controller = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
         self.presentViewController(controller, animated: true, completion: nil)
     }
-    
     
     // Return the section row count.
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -169,9 +153,8 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Present the FindLocationViewController.
         self.presentViewController(locationController, animated: true, completion: nil)
     }
-
     
-    // Use a UIAlertController to inform user of issue.
+    // Use an UIAlertController to inform user of issue.
     func alertUser() {
         
         // Use the main queue to ensure speed.
@@ -187,8 +170,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             // Create action button with OK button to dismiss alert.
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
-                //IMPORTANT: MAKE SURE THIS RUNS WITH THIS IN IT AS UNCOMMENTED
-                //self.dismissViewControllerAnimated(true, completion: nil)
+                
             }
             
             // Add the OK action.

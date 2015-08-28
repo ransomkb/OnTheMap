@@ -16,6 +16,7 @@ class WebViewController: UIViewController, UIWebViewDelegate {
     var urlRequest: NSURLRequest? = nil
     
     @IBOutlet weak var webView: UIWebView!
+    @IBOutlet weak var searchingActivityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

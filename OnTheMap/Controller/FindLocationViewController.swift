@@ -89,7 +89,6 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     
                     println("OTMClient userLocation dictionary: \(OTMClient.sharedInstance().userLocation?.studentDictionary)")
                     
-                    
                     // Record that this is a new location.
                     self.newLocation = true
                     
@@ -109,12 +108,6 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         // Follow the user's current location, if allowed.
         locationManager.startUpdatingLocation()
         
-        // IMPORTANT: May already be being set by location manager.
-        // Fill text field with user's current location data for convenience.
-//        if let place = placemark {
-//            textField.text = "\(placemark.locality), \(placemark.administrativeArea)  \(placemark.country)"
-//        }
-        
         // Reveal and hide various UI elements.
         showUI()
     }
@@ -130,9 +123,6 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         
         // Stop tracking current location.
         locationManager.stopUpdatingLocation()
-        
-        // IMPORTANT: maybe do not need
-        //showLocationUI = true
         
         super.viewWillDisappear(animated)
     }
@@ -168,10 +158,6 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
             
             // Start animating activity indicator and fade some UI elements.
             startIndicatingActivity()
-            
-            
-            // IMPORTANT: PROBABLY DO NOT NEED
-            //let addressString = self.textField.text
             
             // Create a geocoder instance.
             let geoCoder = CLGeocoder()
@@ -499,7 +485,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         previousLabel.text = self.alertMessage
     }
     
-    // Use a UIAlertController to inform user of issue.
+    // Use an UIAlertController to inform user of issue.
     func alertUser() {
         
         // Use the main queue to ensure speed.
@@ -515,8 +501,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
             
             // Create action button with OK button to dismiss alert.
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
-                //IMPORTANT: MAKE SURE THIS RUNS WITH THIS IN IT AS UNCOMMENTED
-                //self.dismissViewControllerAnimated(true, completion: nil)
+                
             }
             
             // Add the OK action.

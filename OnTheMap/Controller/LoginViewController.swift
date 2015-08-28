@@ -70,7 +70,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 self.alertUser()
             } else {
                 
-                // Check to see if password field is emplty.
+                // Check to see if password field is empty.
                 if let password = passwordTextField.text {
                     if password.isEmpty {
                         
@@ -126,18 +126,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let url = NSURL(string: "https://www.udacity.com/account/auth#!/signup")
         detailController.urlRequest = NSURLRequest(URL: url!)
         detailController.authenticating = false
+        detailController.searchingActivityIndicator.startAnimating()
         
         self.presentViewController(detailController, animated: true, completion: nil)
     }
-    
-//  seems like it is not needed
-//    func completeLogin() {
-//        dispatch_async(dispatch_get_main_queue(), {
-//            self.debugTextLabel.text = ""
-//            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("UITabBarController") as! UITabBarController
-//            self.presentViewController(controller, animated: true, completion: nil)
-//        })
-//    }
     
     // Alert user to any messages and issues.
     func alertUser() {
@@ -163,16 +155,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             self.presentViewController(alertController, animated: true, completion: nil)
         })
     }
-    
-    // Maybe don't need
-//    func displayError(errorString: String?) {
-//        dispatch_async(dispatch_get_main_queue(), {
-//            if let errorString = errorString {
-//                self.debugTextLabel.text = errorString
-//            }
-//        })
-//    }
-    
+        
     // Allow the user to dismiss the keyboard.
     func addKeyboardDismissRecognizer() {
         if let tapper = tapRecognizer {

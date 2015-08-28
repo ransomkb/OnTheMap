@@ -47,8 +47,9 @@ class OTMClient: NSObject {
         
         // Create request from URL.
         let urlString = baseURL + method + parameters
-        // clean up
+        
         println("GET URL: \(urlString)")
+        
         let url = NSURL(string: urlString)!
         let request = NSMutableURLRequest(URL: url)
         
@@ -81,8 +82,9 @@ class OTMClient: NSObject {
                     newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
                 }
                 
-                // clean up
+                
                 //println("JSONResult data: \(NSString(data: newData, encoding: NSUTF8StringEncoding)!)")
+                
                 // Send data to shared JSON parser.
                 OTMClient.parseJSONWithCompletionHandler(newData, completionHandler: completionHandler)
             }
@@ -135,6 +137,7 @@ class OTMClient: NSObject {
                 }
                 
                 //println("JSONResult data: \(NSString(data: newData, encoding: NSUTF8StringEncoding)!)")
+                
                 // Send data to shared JSON parser.
                 OTMClient.parseJSONWithCompletionHandler(newData, completionHandler: completionHandler)
             }
@@ -211,6 +214,7 @@ class OTMClient: NSObject {
             NSLog("Error is: \(parsingError)");
             completionHandler(result: nil, error: error)
         } else {
+            
             // Use completion handler to return the result from parsing the JSON
             println("No Parsing Error")
             completionHandler(result: parsedResult, error: nil)
@@ -258,6 +262,7 @@ class OTMClient: NSObject {
         return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
     }
     
+    // Create a shared instance of a singleton.
     class func sharedInstance() -> OTMClient {
         struct Singleton {
             static var sharedInstance = OTMClient()

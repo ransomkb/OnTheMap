@@ -16,22 +16,27 @@ extension OTMClient {
     func authenticateWithLogIn(hostViewController: UIViewController, completionHandler: (success: Bool, errorString: String?) -> Void) {
         
         println("Started Authentication with Log In.")
+        
         // Get an account key from Udacity.
         self.getAccountKey() { (success, errorString) -> Void in
             if success {
                 println("Got Account Key. Time to get User Data.")
+                
                 // Account key was gotten, so get user data.
                 self.getUserData() { (success, errorString) -> Void in
                     if success {
                         println("Got User Data.")
+                        
                         // Inform Controller of success.
                         completionHandler(success: success, errorString: errorString)
                     } else {
+                        
                         // Inform controller that failed to get user data
                         completionHandler(success: success, errorString: errorString)
                     }
                 }
             } else {
+                
                 // Inform controller that log in data failed to get an account key
                 completionHandler(success: success, errorString: errorString)
             }
@@ -42,8 +47,10 @@ extension OTMClient {
     func getAccountKey(completionHandler: (success: Bool, errorString: String?) -> Void) {
         
         println("Getting Account Key.")
+        
         // Create a string of parameters for RESTful request.
         var parameters = OTMClient.substituteKeyInMethod(OTMClient.URLKeys.AuthenticationDictionary, key: OTMClient.URLKeys.UID, value: self.userID)
+        
         // Replace variables in parameter with actual data.
         parameters = OTMClient.substituteKeyInMethod(parameters!, key: OTMClient.URLKeys.PWD, value: self.password)
         println("Before Task parameters: \(parameters!)")

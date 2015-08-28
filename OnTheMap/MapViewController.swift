@@ -47,13 +47,6 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // IMPORTANT: used for testing
-//        var itNum = 0
-//        let navIts = self.navigationBar.items
-//        for i in navIts {
-//            println("\(i) is position \(itNum)")
-//        }
-        
         // Add right nav button items to array.
         var navItem:UINavigationItem = self.navigationBar.items[0] as! UINavigationItem
         navBarButtonItems = [self.refreshButtonItem, self.userLocationButtonItem]
@@ -159,9 +152,6 @@ class MapViewController: UIViewController {
                     // Refresh the data, updating the data source for pins based on array of student locations.
                     self.loadInitialData()
                     
-                    //println(self.pinData)
-                    //println("Try to add pins in viewDidLoad.")
-                    
                     // Add pin annotations to map view on the main queue.
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.mapView!.addAnnotations(self.pinData)
@@ -216,7 +206,7 @@ class MapViewController: UIViewController {
         }
     }
     
-    // Use a UIAlertController to inform user of issue.
+    // Use an UIAlertController to inform user of issue.
     func alertUser() {
         
         // Use the main queue to ensure speed.
@@ -232,8 +222,7 @@ class MapViewController: UIViewController {
             
             // Create action button with OK button to dismiss alert.
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
-                //IMPORTANT: MAKE SURE THIS RUNS WITH THIS IN IT AS UNCOMMENTED
-                //self.dismissViewControllerAnimated(true, completion: nil)
+                
             }
             
             // Add the OK action.

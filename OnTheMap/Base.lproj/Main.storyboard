@@ -453,8 +453,11 @@
                             </navigationBar>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cAN-3T-bh1">
                                 <rect key="frame" x="0.0" y="64" width="600" height="558"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </webView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="JIu-C1-xV6">
+                                <rect key="frame" x="282" y="324" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -462,12 +465,15 @@
                             <constraint firstItem="AvI-pH-YCC" firstAttribute="leading" secondItem="ZAX-bx-Ske" secondAttribute="leading" id="6yD-nc-dTh"/>
                             <constraint firstAttribute="bottomMargin" secondItem="cAN-3T-bh1" secondAttribute="bottom" constant="-22" id="MRg-2W-wbH"/>
                             <constraint firstItem="cAN-3T-bh1" firstAttribute="leading" secondItem="AvI-pH-YCC" secondAttribute="leading" id="Tg9-A8-JWA"/>
+                            <constraint firstItem="saT-pQ-Ed7" firstAttribute="top" secondItem="JIu-C1-xV6" secondAttribute="bottom" constant="239" id="X2z-2T-Fqa"/>
                             <constraint firstItem="AvI-pH-YCC" firstAttribute="trailing" secondItem="cAN-3T-bh1" secondAttribute="trailing" id="agi-dU-bxC"/>
                             <constraint firstItem="AvI-pH-YCC" firstAttribute="top" secondItem="sDg-HF-eXL" secondAttribute="bottom" id="f80-zP-mzS"/>
+                            <constraint firstItem="JIu-C1-xV6" firstAttribute="centerX" secondItem="AvI-pH-YCC" secondAttribute="centerX" id="iUN-e5-qcE"/>
                             <constraint firstAttribute="trailing" secondItem="AvI-pH-YCC" secondAttribute="trailing" id="y2d-in-VRy"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="searchingActivityIndicator" destination="JIu-C1-xV6" id="7zG-no-mnT"/>
                         <outlet property="webView" destination="cAN-3T-bh1" id="cQr-6x-hk1"/>
                     </connections>
                 </viewController>
