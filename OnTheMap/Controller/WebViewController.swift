@@ -47,16 +47,16 @@ class WebViewController: UIViewController, UIWebViewDelegate {
         }
     }
     
-    // Close this page and return to either MapViewController or the log in view controller.
+    // Close this page and return to either UITabBarController or the log in view controller.
     @IBAction func closeWebView(sender: UIBarButtonItem) {
         
         // Check shared OTMClient if logged in.
         if OTMClient.sharedInstance().loggedIn {
             
-            // Create instance of MapViewController on storyboard.
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
+            // Create instance of UITabBarController on storyboard.
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("UITabBarController") as! UITabBarController
             
-            // Present the ManagerTabBarController.
+            // Present the UITabBarController.
             self.presentViewController(controller, animated: true, completion: nil)
         } else {
             

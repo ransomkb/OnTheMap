@@ -143,17 +143,17 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         return true
     }
     
-    // Cancel activities and return to MapViewController.
+    // Cancel activities and return to UITabBarController.
     @IBAction func cancelActivities(sender: AnyObject) {
         NSOperationQueue.mainQueue().addOperationWithBlock {
             
             // Stop activity indicator.
             self.activityIndicatorView.stopAnimating()
             
-            // Create instance of MapViewController with storyboard.
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
+            // Create instance of UITabBarController with storyboard.
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("UITabBarController") as! UITabBarController
             
-            // Present the MapViewController.
+            // Present the UITabBarController.
             self.presentViewController(controller, animated: true, completion: nil)
         }
     }
@@ -287,7 +287,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     if success {
                         println("User Location was created.")
                         
-                        // Update student locations on Udacity, then present MapViewController.
+                        // Update student locations on Udacity, then present UITabBarController.
                         self.returnToRootController()
                     } else {
                         
@@ -310,7 +310,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     if success {
                         println("User Location was updated.")
                         
-                        // Update student locations on Udacity, then present MapViewController.
+                        // Update student locations on Udacity, then present UITabBarController.
                         self.returnToRootController()
                     } else {
                         
@@ -349,7 +349,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
         OTMClient.sharedInstance().myLocation = CLLocation(latitude: self.userLocation!.latitude, longitude: self.userLocation!.longitude)
     }
     
-    // Update student locations on Udacity, then present MapViewController.
+    // Update student locations on Udacity, then present UITabBarController.
     func returnToRootController() {
         println("Preparing to return to Map View Controller.")
         
@@ -369,19 +369,19 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
                     
                     println("Retrieved \(OTMClient.sharedInstance().students.count) Student Locations.")
                     
-                    // Set the map view location for the return to MapViewController.
+                    // Set the map view location for the return to UITabBarController.
                     self.setCenterLocation()
                     
-                    // Create a pin datum to be added to the annotations on MapViewController.
+                    // Create a pin datum to be added to the annotations on UITabBarController.
                     // Store the data on the shared OTMClient.
                     OTMClient.sharedInstance().pinDatum = PinData(title: "\(self.userLocation!.firstName) \(self.userLocation!.lastName)", urlString: "\(self.userLocation!.mediaURL)", coordinate: self.coordinates!)
                     
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         
-                        // Create an instance of MapViewController on storyboard.
-                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
+                        // Create an instance of UITabBarController on storyboard.
+                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("UITabBarController") as! UITabBarController
                         
-                        // Present the MapViewController.
+                        // Present the UITabBarController.
                         self.presentViewController(controller, animated: true, completion: nil)
                     }
                 } else {
@@ -516,7 +516,7 @@ class FindLocationViewController: UIViewController, CLLocationManagerDelegate, U
             // Create action button with OK button to dismiss alert.
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
                 //IMPORTANT: MAKE SURE THIS RUNS WITH THIS IN IT AS UNCOMMENTED
-                self.dismissViewControllerAnimated(true, completion: nil)
+                //self.dismissViewControllerAnimated(true, completion: nil)
             }
             
             // Add the OK action.

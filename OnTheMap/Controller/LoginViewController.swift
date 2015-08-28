@@ -93,10 +93,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 println("Last Name: \(OTMClient.sharedInstance().lastName!)")
                                 println("First Name: \(OTMClient.sharedInstance().firstName!)")
                                 
-                                // Segue to MapViewController.
+                                // Segue to UITabBarController.
                                 println(" Prepare to segue.")
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! MapViewController
+                                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("UITabBarController") as! UITabBarController
                                     self.presentViewController(controller, animated: true, completion: nil)
                                 }
                             } else {
@@ -134,7 +134,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 //    func completeLogin() {
 //        dispatch_async(dispatch_get_main_queue(), {
 //            self.debugTextLabel.text = ""
-//            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") as! UITabBarController
+//            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("UITabBarController") as! UITabBarController
 //            self.presentViewController(controller, animated: true, completion: nil)
 //        })
 //    }
@@ -155,7 +155,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             // Allow an ok button to dismiss alert.
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
-                self.dismissViewControllerAnimated(true, completion: nil)
+                //IMPORTANT: dismissing will dismiss the underlying controller, not the alert action only.
+                //self.dismissViewControllerAnimated(true, completion: nil)
             }
             
             alertController.addAction(okAction)

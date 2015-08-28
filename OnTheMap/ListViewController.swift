@@ -188,7 +188,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             // Create action button with OK button to dismiss alert.
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
                 //IMPORTANT: MAKE SURE THIS RUNS WITH THIS IN IT AS UNCOMMENTED
-                self.dismissViewControllerAnimated(true, completion: nil)
+                //self.dismissViewControllerAnimated(true, completion: nil)
             }
             
             // Add the OK action.
