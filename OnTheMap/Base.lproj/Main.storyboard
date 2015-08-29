@@ -257,7 +257,7 @@
                             <mapView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="htk-dr-wBb">
                                 <rect key="frame" x="16" y="159" width="575" height="421"/>
                             </mapView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="cla-Yw-q7x">
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="cla-Yw-q7x">
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                                 <color key="color" red="0.29343057979999998" green="0.72594428649999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
