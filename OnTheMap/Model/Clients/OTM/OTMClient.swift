@@ -15,10 +15,9 @@ class OTMClient: NSObject {
     var loggedIn = false
     
     var session: NSURLSession
-    // clean up
-    // Change these back to nil later
-    var userID: String = ""
-    var password: String = ""
+    
+    var userID: String? = nil
+    var password: String? = nil
     
     var accountKey: String? = nil
     var sessionID: String? = nil

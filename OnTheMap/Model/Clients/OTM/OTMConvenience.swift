@@ -49,10 +49,10 @@ extension OTMClient {
         println("Getting Account Key.")
         
         // Create a string of parameters for RESTful request.
-        var parameters = OTMClient.substituteKeyInMethod(OTMClient.URLKeys.AuthenticationDictionary, key: OTMClient.URLKeys.UID, value: self.userID)
+        var parameters = OTMClient.substituteKeyInMethod(OTMClient.URLKeys.AuthenticationDictionary, key: OTMClient.URLKeys.UID, value: self.userID!)
         
         // Replace variables in parameter with actual data.
-        parameters = OTMClient.substituteKeyInMethod(parameters!, key: OTMClient.URLKeys.PWD, value: self.password)
+        parameters = OTMClient.substituteKeyInMethod(parameters!, key: OTMClient.URLKeys.PWD, value: self.password!)
         println("Before Task parameters: \(parameters!)")
         
         // Create a dictionary to hold values for request.
@@ -195,7 +195,9 @@ extension OTMClient {
                     println("Got User's Existing StudentLocation.")
                     
                     // Check if dictionary of results is empty.
-                    if results.count < 0 {
+                    if results.count > 0 {
+                        
+                        println("Results count: \(results.count)")
                         
                         // Create a StudentLocation object for the user's location from results dictionary.
                         self.userLocation = StudentLocation(dictionary: results[0])

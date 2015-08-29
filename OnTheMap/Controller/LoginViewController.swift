@@ -80,8 +80,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     } else {
                         
                         // Set userID and password variables, then authenticate.
-                        OTMClient.sharedInstance().userID = "ransomkb@icloud.com" //userID
-                        OTMClient.sharedInstance().password = "Okonomiyuki80" //password
+                        OTMClient.sharedInstance().userID = userID
+                        OTMClient.sharedInstance().password = password
                         OTMClient.sharedInstance().authenticateWithLogIn(self, completionHandler: { (success, errorString) -> Void in
                             
                             if success {
