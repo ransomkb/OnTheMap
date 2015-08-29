@@ -48,6 +48,18 @@ class WebViewController: UIViewController, UIWebViewDelegate {
         }
     }
     
+    func webViewDidStartLoad(webView: UIWebView) {
+        
+        // Indicate searching for url.
+        searchingActivityIndicator.startAnimating()
+    }
+    
+    func webViewDidFinishLoad(webView: UIWebView) {
+    
+        // Stop indicating activity.
+        searchingActivityIndicator.stopAnimating()
+    }
+    
     // Close this page and return to either UITabBarController or the log in view controller.
     @IBAction func closeWebView(sender: UIBarButtonItem) {
         

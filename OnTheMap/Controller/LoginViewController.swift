@@ -126,7 +126,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let url = NSURL(string: "https://www.udacity.com/account/auth#!/signup")
         detailController.urlRequest = NSURLRequest(URL: url!)
         detailController.authenticating = false
-        detailController.searchingActivityIndicator.startAnimating()
         
         self.presentViewController(detailController, animated: true, completion: nil)
     }
