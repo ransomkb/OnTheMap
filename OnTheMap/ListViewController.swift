@@ -95,12 +95,15 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Create an NSURL from the mediaURL string of the selected location, if one exists.
         if let url = NSURL(string: students[indexPath.row].mediaURL) {
             
-            // Set request details.
-            detailController.urlRequest = NSURLRequest(URL: url)
-            detailController.authenticating = false
+            // Open url in default browser.
+            UIApplication.sharedApplication().openURL(url)
             
-            // Present the WebViewController.
-            self.presentViewController(detailController, animated: true, completion: nil)
+            // Set request details.
+//            detailController.urlRequest = NSURLRequest(URL: url)
+//            detailController.authenticating = false
+//            
+//            // Present the WebViewController.
+//            self.presentViewController(detailController, animated: true, completion: nil)
         } else {
             
             // Alert the user that the mediaURL string of the selected location had an issue.

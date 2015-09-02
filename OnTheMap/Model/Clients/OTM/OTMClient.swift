@@ -31,6 +31,8 @@ class OTMClient: NSObject {
     
     var myLocation: CLLocation? = CLLocation(latitude: 39.50, longitude: -98.35)
     var userLocation: StudentLocation? = nil
+    
+    // Array of structs holding student location data.
     var students:[StudentLocation] = [StudentLocation]()
     
     // For updating and centering map after user location is set
